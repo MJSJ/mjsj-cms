@@ -1,6 +1,7 @@
 "use strict";
 
 import api from "../../common/api/api.js"
+import {tabs} from "../components";
 
 let mutations = {
     fetchSubjectList(state,payload){
@@ -36,7 +37,9 @@ export default function generateStore(baseargs){
             baseargs: baseargs,
             ajaxData: null,
             subjectList:null,
-            info:""
+            info:"",
+            currentView: 'subject',
+            tabs: tabs,
         },
         mutations: mutations,
         actions: actions

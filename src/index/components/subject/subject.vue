@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { SUBJECT_ITEM } from "../../common/api/url.js"
+import { SUBJECT_ITEM } from "../../../common/api/url.js"
 
 export default {
     data() {
