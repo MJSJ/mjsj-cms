@@ -5,25 +5,27 @@
         <el-col :span="3">
             <SideBar></SideBar>
         </el-col>
-
-        <el-col :span="18"  v-if="data.subjectList">
-            <subjectList :subjectList="data.subjectList"></subjectList>
+        <el-col :span="18">
+            <TabBar></TabBar>
+            <ComponentsBar></ComponentsBar>
         </el-col>
     </el-row>
-    
 </div>
 </template>
 
 <script>
 import SideBar from '../common/components/sideBar.vue'
 import LoginBar from '../common/components/loginBar.vue'
-import SubjectList from './components/subjectList.vue'
+import TabBar from '../common/components/tabBar.vue'
+import ComponentsBar from '../common/components/componentsBar.vue'
+
 export default {
     name: 'app',
     components: {
         SideBar,
-        SubjectList,
-        LoginBar
+        TabBar,
+        LoginBar,
+        ComponentsBar
     },
     data() {
         return {
