@@ -5,7 +5,7 @@
         <el-col :span="3">
             <SideBar></SideBar>
         </el-col>
-        <el-col :span="18">
+        <el-col :span="21">
             <TabBar></TabBar>
             <ComponentsBar></ComponentsBar>
         </el-col>

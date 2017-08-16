@@ -21,3 +21,10 @@ export default {
     components
 }
 </script>
+
+<style lang="less">
+    .content{
+        box-sizing: border-box;
+        padding: 20px;
+    }
+</style>

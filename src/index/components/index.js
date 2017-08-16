@@ -3,8 +3,8 @@
  * 导出组件,菜单项
  */
 let components = {}, tabs = [], nav = [];
-let nameList = ['专题管理','系统设置'];
-let modules = ['subject', 'system'];
+let nameList = ['模板管理','专题管理','系统设置'];
+let modules = ['page', 'subject', 'system'];
 
 modules.forEach((item, idx)=>{
     let map = require(`./${item}/map`).default;
@@ -16,7 +16,7 @@ modules.forEach((item, idx)=>{
             id: ite.id
         });
     });
-    tabs.push(arr);
+    tabs = tabs.concat(arr);
     nav.push({
         id: item,
         name: nameList[idx],

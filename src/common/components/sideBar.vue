@@ -1,22 +1,31 @@
 <template>
     <div class="side_bar">
         <el-row class="tac">
-            <el-col :span="8">
-                <el-menu default-active="0"
-                         class="el-menu-vertical"
-                         width="208px"
-                         unique-opened="true">
-                    <template v-for="(item, index) in nav">
-                        <el-submenu :index="index">
-                            <el-menu-item-group :title="item.name">
-                                <el-menu-item v-for="(tab, idx) in item.list" :index="idx">
+            <el-menu default-active="0"
+                     class="el-menu-vertical"
+                     :unique-opened="true">
+                <template v-for="(item, index) in nav">
+                    <template v-if="item.list.length === 1">
+                        <el-menu-item :index="item.list[0].id"
+                                      @click="handleView(item.list[0].id)">
+                            {{item.list[0].name}}
+                        </el-menu-item>
+                    </template>
+                    <template v-else>
+                        <el-submenu :index="item.id">
+                            <template slot="title">{{item.name}}</template>
+                            <el-menu-item-group>
+                                <el-menu-item v-for="(tab, idx) in item.list"
+                                              v-bind:index="tab.id"
+                                              :key="tab.id"
+                                              @click="handleView(tab.id)">
                                     {{tab.name}}
                                 </el-menu-item>
                             </el-menu-item-group>
                         </el-submenu>
                     </template>
-                </el-menu>
-            </el-col>
+                </template>
+            </el-menu>
         </el-row>
     </div>
 </template>
@@ -31,6 +40,11 @@ export default {
     },
     props: {
         data: {}
+    },
+    methods: {
+        handleView (id) {
+            this.$store.commit('setCurrentView', id);
+        }
     }
 }
 </script>
