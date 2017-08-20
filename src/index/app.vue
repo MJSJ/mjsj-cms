@@ -1,6 +1,10 @@
 <template>
 <div class="app">
+
     <loginBar></loginBar>
+
+
+
     <el-row>
         <el-col :span="3">
             <SideBar></SideBar>
@@ -35,7 +39,11 @@ export default {
     props: {
         data: {}
     },
+
+
+    //在加载后会自动执行
     mounted() {
+        //触发一个action
         this.$store.dispatch('fetchSubjectList');
     },
     methods: {

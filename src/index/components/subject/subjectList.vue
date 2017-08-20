@@ -36,6 +36,10 @@ export default {
         }
     },
     methods: {
+        deleteSubject(){
+            // this.$store.dispatch("deleteSubject",{id:})
+        },
+
         //下面的代码是之前跳转的页面的逻辑，
         //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {

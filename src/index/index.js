@@ -43,6 +43,6 @@ function getBaseArguments(){
 
 (function init() {
     let baseargs = getBaseArguments();
-    let storeObj = generateStore(baseargs);
+    let storeObj = generateStore(baseargs); //状态树
     renderPage(storeObj);
 })();

@@ -11,7 +11,7 @@ export default function generateStore(baseargs){
         state: {
             baseargs: baseargs,
             ajaxData: null,
-            subjectList:null,
+            subjectList:null, //db.subjectList
             info:"",
             currentView: '',
             tabs: tabs,

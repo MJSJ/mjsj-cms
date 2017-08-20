@@ -5,6 +5,8 @@ import api from "../../common/api/api.js";
 
 export const fetchSubjectList = (context) => {
     api.fetchSubjectList().then((data)=>{
+        // data => subjecList对象
+        //提交一个mutation
         context.commit("fetchSubjectList",data)
     })
 };

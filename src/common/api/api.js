@@ -5,6 +5,7 @@ import {get,all,local} from "./tool.js"
 
 const HOST = "mykrystal.com"
 const GET_URLS = {
+    // fetchSubject:HOST+"/cms/fetchSubjectList"
     // getShopBoard:HOST+"/joy/merchant/getshopboard",
 }
 const POST_URLS = {
