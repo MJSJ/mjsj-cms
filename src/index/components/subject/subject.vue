@@ -11,7 +11,7 @@ export default {
         }
     },
     props: {
-        subjectList: {}
+        subject: {}
     },
     methods: {
     },

@@ -1,3 +1,7 @@
+// ────────────────────────────────────────────────────────────────────────────────
+// mock数据的
+// ────────────────────────────────────────────────────────────────────────────────
+
 export const subjectList =  [
     {
         id:"001",
@@ -8,7 +12,7 @@ export const subjectList =  [
         }
     },
     {
-        id:"001",
+        id:"002",
         name:"专题name",
         lastEdit:{
             userName:"旷宇",
@@ -16,7 +20,7 @@ export const subjectList =  [
         }
     },
     {
-        id:"001",
+        id:"003",
         name:"专题name",
         lastEdit:{
             userName:"旷宇",

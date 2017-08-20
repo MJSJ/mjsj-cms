@@ -6,6 +6,10 @@ export const fetchSubjectList = (state,payload) => {
     state.subjectList = payload;
 };
 
+export const fetchSubject = (state,payload)=>{
+    state.subject = payload;
+}
+
 export const setCurrentView = (state, view) => {
     state.currentView = view;
     let v = state.tabs.find(item=>item.id === view);

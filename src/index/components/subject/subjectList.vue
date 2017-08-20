@@ -1,6 +1,5 @@
 <template>
     <div class="subject_list">
-        专题列表模块，需求待讨论...
         <el-table border :data="subjectList" style="width: 100%">
     
             <el-table-column prop="id" label="ID" width="120">
@@ -30,16 +29,15 @@
 
 <script>
 import { SUBJECT_ITEM } from "../../../common/api/url.js"
-
+import {mapState} from 'vuex' 
 export default {
     data() {
         return {
         }
     },
-    props: {
-        subjectList: {}
-    },
     methods: {
+        //下面的代码是之前跳转的页面的逻辑，
+        //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {
             window.location.href = SUBJECT_ITEM + "?subjectId=" + row.id;
         },
@@ -54,7 +52,13 @@ export default {
     },
     mounted() {
 
-    }
+    },
+
+    //通过mapState方法，
+    //直接从根store里取
+    computed: mapState({ 
+        subjectList: 'subjectList'
+    })  
 
 }
 </script>
