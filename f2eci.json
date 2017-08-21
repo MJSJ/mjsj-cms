@@ -7,5 +7,5 @@
 	"output": "./html",
 	"urlPrefix": "/",
 	"static-src": "static",
-	"env": "dev"
+	"env": "product"
 }

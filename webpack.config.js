@@ -5,7 +5,7 @@ var fs = require('fs');
 var webpack = require('webpack');
 const Autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 var STATIC_SRC = require("./f2eci")["static-src"];
 var DIST_PATH = require('./f2eci').dist;
@@ -13,20 +13,23 @@ var HTML_PATH = require('./f2eci').output;
 var env = require("./f2eci").env;
 var PUBLIC_PATH = require('./f2eci').urlPrefix + STATIC_SRC + '/';
 
+if(process.env.NODE_ENV === 'dev'){
+    env = 'dev';
+}
+
 var plugins = [
     new CleanWebpackPlugin(['dist'], {
         root: path.join(__dirname),
         verbose: true,
         dry: false
     }),
-    new CopyWebpackPlugin([
-        {
-            from: './html',
-            to: '../'
-        }
-    ]),
+    new HtmlWebpackPlugin({
+        filename: path.join(__dirname, DIST_PATH , '/index.html'),
+        template: path.join(__dirname, HTML_PATH + '/index.html'),
+        inject: true
+    }),
     new ExtractTextPlugin({
-        filename: "[name].css",
+        filename: env === 'dev' ? '[name].css' : '[name].[chunkhash:7].css',
         disable: false,
         allChunks: true
     }),
@@ -38,6 +41,14 @@ var plugins = [
                 })
             ]
         }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: "vendor",
+        // filename: "vendor.js"
+        // (给 chunk 一个不同的名字)
+        
+        minChunks: Infinity,
+        // 随着 入口chunk 越来越多，这个配置保证没其它的模块会打包进 公共chunk
     })
 ];
 
@@ -50,6 +61,9 @@ if (env == "product") {
     // 参考 https://doc.webpack-china.org/guides/migrating/#uglifyjsplugin-sourcemap
     plugins.push(new webpack.optimize.UglifyJsPlugin({
         // sourceMap: true
+        compress: {
+            warnings: false
+        }
     }));
     // 参考 https://doc.webpack-china.org/guides/migrating/#uglifyjsplugin-loaders
     plugins.push(new webpack.LoaderOptionsPlugin({
@@ -106,12 +120,13 @@ if (env == "dev") {
 module.exports = {
     entry: {
         'index': ['./src/index/index.js'],
+        'vendor': ["vue", "vuex", "element-ui"],
     },
     output: {
-        filename: '[name].js',
+        filename: env === 'dev' ? '[name].js' : '[name].[chunkhash:7].js',
         path: path.join(__dirname, DIST_PATH, STATIC_SRC),
         publicPath: PUBLIC_PATH,
-        chunkFilename: '[name].[chunkhash].js',
+        chunkFilename: '[name].[chunkhash:7].js',
         sourceMapFilename: '[name].map'
     },
     devtool: 'inline-source-map',
@@ -165,6 +180,7 @@ module.exports = {
         port: 8080,
         disableHostCheck: true,  // 失能域名检查
         publicPath: PUBLIC_PATH,
-        noInfo: false
+        noInfo: false,
+        compress: true // 开启GZIP,dev的时候感觉快一点
     }
 };
