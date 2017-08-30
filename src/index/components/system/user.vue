@@ -87,7 +87,17 @@
             totalTopics: 'totalTopics',
         }),
         mounted() {
-            getCheckedList();
+            //getCheckedList
+            this.userList.forEach((item)=>{
+                //这个copyArr传的空也要报错
+                let totalTopicsCopy = copyArr(this.totalTopics.copy);
+                item.subjectList.forEach((topic)=>{
+                    let index = findTopic(topic.name, totalTopicsCopy);
+                    if (index >= 0)
+                        totalTopicsCopy[index].isChecked = true;
+                });
+                this.checkedList.push(totalTopicsCopy);
+            })
         },
         methods: {
             handleEdit: function (index, row) {
@@ -100,17 +110,6 @@
         }
     }
 
-    function getCheckedList() {
-        this.userList.forEach(function (item) {
-            let totalTopicsCopy = copyArr(this.totalTopics.copy);
-            item.subjectList.forEach(function (topic) {
-                let index = findTopic(topic.name, totalTopicsCopy);
-                if (index >= 0)
-                    totalTopicsCopy[index].isChecked = true;
-            });
-            this.checkedList.push(totalTopicsCopy);
-        })
-    }
 
     function findTopic(name, ary) {
         for (let i = 0; i < ary.length; i++) {
