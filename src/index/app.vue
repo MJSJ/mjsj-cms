@@ -45,6 +45,8 @@ export default {
     mounted() {
         //触发一个action
         this.$store.dispatch('fetchSubjectList');
+        this.$store.dispatch('fetchUserList');
+        this.$store.dispatch('fetchTotalTopics');
     },
     methods: {
 

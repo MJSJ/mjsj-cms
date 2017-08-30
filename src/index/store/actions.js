@@ -29,4 +29,16 @@ export const deleteSubject = (context,args) => {
     }).catch((e)=>{
         window.vm.$message(e);
     })
-};
+}
+
+export const fetchUserList = (context,args)=>{
+    api.fetchUserList(args).then((data)=>{
+        context.commit("fetchUserList",data)
+    })
+}
+
+export const fetchTotalTopics = (context,args)=>{
+    api.fetchTotalTopics(args).then((data)=>{
+        context.commit("fetchTotalTopics",data)
+    })
+}
