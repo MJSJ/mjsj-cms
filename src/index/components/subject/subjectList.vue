@@ -24,28 +24,27 @@
             </el-table-column>
     
         </el-table>
-        <el-dialog title="专题详情页" :visible.sync="dialogFormVisible" size="large">
+        <el-dialog  title="专题详情页" :visible.sync="dialogFormVisible" size="large">
             <div class="tag_area">
                 <div class="tag_cell">
                 <el-tag type="primary">版本标识</el-tag>
-                <el-tag type="success">1.0.0</el-tag>
+                <el-input v-model="input" :placeholder="subject.history[0].tag"  :disabled="inputVisibal"></el-input>
+                 <el-button type="info" @click="editVersion">编辑</el-button>
             </div>
             <div class="tag_cell">
                 <el-tag type="primary">拥有者</el-tag>
-                <el-tag type="success">火火的锅</el-tag>
+                <el-tag type="success">{{subject.owner.name}}</el-tag>
             </div>
             </div>
             <div class="version_area">
                 <div class="text_area">
-                    放置的代码片段
+                    {{subject}}
                 </div>
                 <div class="select_area">
                     <el-form :model="form">
                     <el-form-item label="历史版本" :label-width="formLabelWidth">
                     <el-select v-model="form.region" placeholder="请选择历史版本">
-                        <el-option label="版本1.0.0" value="shanghai"></el-option>
-                    <el-option label="版本1.0.1" value="shanghai"></el-option>
-                    <el-option label="版本1.0.2" value="shanghai"></el-option>
+                        <el-option v-if="subjecty.history.length > 0"  v-for="item in subjecty.history"  :key="item.id" :label="item.tag" value="shanghai"></el-option>
                     </el-select>
                     </el-form-item> 
                 </el-form>
@@ -68,9 +67,15 @@ import { SUBJECT_ITEM } from "../../../common/api/url.js"
 import {mapState} from 'vuex' 
 import subjectDialog from "./components/subjectDialog.vue"
 export default {
+    activated () {
+        
+    },
     data() {
         return {      
                 dialogFormVisible: false,
+                inputVisibal:true,
+                editWord:'编辑', 
+                input:'',
                 title:'专题详情页',
                 form: {
                     name: '',
@@ -82,7 +87,15 @@ export default {
                     resource: '',
                     desc: ''
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '120px',
+                dialogData:[
+                    {name:'a'},
+                    {name:'b'}
+                ]        
+                    
+
+                
+
         }
     },
     components:{
@@ -99,7 +112,9 @@ export default {
            // window.location.href = SUBJECT_ITEM + "?subjectId=" + row.id;
            console.log(index);
            console.log(row);
-            this.dialogFormVisible = true;
+           this.dialogFormVisible = true;
+           this.$store.dispatch("fetchSubject");
+
         },
         handleDelete(index, row) {
             this.$confirm('确认删除？')
@@ -108,7 +123,12 @@ export default {
                     this.$store.dispatch("deleteSubject", { subjectID: row.id })
                 })
                 .catch(_ => { });
-        }
+        },
+        editVersion(){
+            this.inputVisibal = false;
+            console.log(1)
+            console.log(this.subject,1)
+        },
     },
     mounted() {
 
@@ -117,7 +137,8 @@ export default {
     //通过mapState方法，
     //直接从根store里取
     computed: mapState({ 
-        subjectList: 'subjectList'
+        subjectList: 'subjectList',
+        subject:'subject'
     })  
 
 }
@@ -126,27 +147,44 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" rel="stylesheet/less">
 .subject_list {
-    max-width: 780px;
-    .tag_area{
-        display: flex;
-        margin-bottom: 20px;
-        .tag_cell{
-            flex: 1
+     max-width: 780px;
+    .el-dialog{
+        .el-dialog__header{
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
         }
-    }
-    .version_area{
-        display: flex;
-        min-height: 400px;
-        .text_area{
-            flex: 2;
-            background: #ccc;
+        .tag_area{
+            display: flex;
+            margin-bottom: 20px;
+            .tag_cell{
+                display: flex;
+                flex: 1;
+                .el-tag{
+                    height: 36px;
+                    line-height: 36px;
+                    margin-right: 10px;
+                }
+                .el-input{
+                    width: 90px;
+                    margin-right: 10px;
+                }
+                
+            }
         }
-        .select_area{
-            flex: 1
+        .version_area{
+            display: flex;
+            min-height: 400px;
+            .text_area{
+                flex: 2;
+                background: #ccc;
+            }
+            .select_area{
+                flex: 1
+            }
         }
-    }
-    .dialog-footer{
-        text-align: center;
+        .dialog-footer{
+            text-align: center;
+        }
     }
 }
 

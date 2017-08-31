@@ -47,20 +47,24 @@ export const result = {
 }
 
 export const subject = {
-    name:"subjectname",
+    name:"subjectname1",
     id:111,
-    tag:"版本标识",
     owner:{
-        name:"拥有者",
+        name:"拥有者(火火)",
     },
+
     history:[
-        {
-            tag:"v1",
-            content:"<div>v1的代码</div>"
+        {   id:1,
+            tag:"版本标识2.0",
+            content:"<div>v1的代码</div>",
+            userName:"huohuo1",
+            time:"11:11 2017/08/08"
         },
-        {
-            tag:"v1",
-            content:"<div>v1的代码</div>"
+        {   id:2,
+            tag:"版本标识3.0",
+            content:"<div>v2的代码</div>",
+            userName:"huohuo2",
+            time:"11:11 2017/08/08"
         },
     ]
 }

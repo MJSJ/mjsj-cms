@@ -7,6 +7,7 @@ export const fetchSubjectList = (state,payload) => {
 };
 
 export const fetchSubject = (state,payload)=>{
+    console.log(payload);
     state.subject = payload;
 }
 
