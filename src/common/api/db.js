@@ -81,16 +81,6 @@ export const totalTopics = [
     },
     {
         id: 111,
-        name: "傻逼专题",
-        isChecked: false
-    },
-    {
-        id: 111,
-        name: "牛逼专题",
-        isChecked: false
-    },
-    {
-        id: 111,
         name: "low逼专题",
         isChecked: false
     },
@@ -114,7 +104,7 @@ export const totalTopics = [
         name: "二逼专题",
         isChecked: false
     }
-]
+];
 
 export const userList = [
     {
@@ -135,14 +125,6 @@ export const userList = [
         name: "公司B",
         password: "",
         subjectList: [
-            {
-                id: 111,
-                name: "傻逼专题"
-            },
-            {
-                id: 111,
-                name: "牛逼专题"
-            },
             {
                 id: 111,
                 name: "傻逼专题"

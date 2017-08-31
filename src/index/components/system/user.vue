@@ -16,7 +16,7 @@
                 <el-table-column label="专题">
                     <template scope="scope">
                         <el-button size="small" type="text" v-for="item in scope.row.subjectList" v-text="item.name"
-                                   @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                   v-show="item.isChecked"></el-button>
                     </template>
                 </el-table-column>
 
@@ -45,7 +45,7 @@
                     <el-input v-model="form.password" auto-complete="off" class="edit_input"></el-input>
                 </el-form-item>
                 <el-form-item label="专题" :label-width="formLabelWidth">
-                    <el-checkbox v-for="item in checkedList" :label="item.name"
+                    <el-checkbox v-for="item in form.subjectList" :label="item.name"
                                  :checked="item.isChecked"></el-checkbox>
                 </el-form-item>
             </el-form>
@@ -66,20 +66,8 @@
         data() {
             return {
                 dialogFormVisible: false,
-                form: {
-                    id: "",
-                    role: "",
-                    name: "",
-                    password: "",
-                    subjectList: [
-                        {
-                            id: "",
-                            name: ""
-                        }
-                    ]
-                },
+                form: {},
                 formLabelWidth: '60px',
-                checkedList: []
             }
         },
         computed: mapState({
@@ -88,26 +76,36 @@
         }),
         mounted() {
             //getCheckedList
-            this.userList.forEach((item)=>{
+            this.userList.forEach((item) => {
                 //这个copyArr传的空也要报错
-                let totalTopicsCopy = copyArr(this.totalTopics.copy);
-                item.subjectList.forEach((topic)=>{
-                    let index = findTopic(topic.name, totalTopicsCopy);
-                    if (index >= 0)
-                        totalTopicsCopy[index].isChecked = true;
+                item.subjectList.forEach((topic) => {
+                    topic.isChecked = true;
                 });
-                this.checkedList.push(totalTopicsCopy);
-            })
+                difference(item.subjectList, this.totalTopics);
+            });
+            this.form = this.userList[0];
+            console.log(this.userList);
+            console.log("=============================");
         },
         methods: {
             handleEdit: function (index, row) {
-                this.dialogFormVisible = true;
                 this.form = this.userList[index];
+                console.log(this.form);
+                this.dialogFormVisible = true;
             },
             handleAdd() {
                 this.dialogFormVisible = true;
             },
         }
+    }
+
+    function difference(subjectList, totalTopics) {
+        totalTopics.forEach((item) => {
+            let index = findTopic(item.name, subjectList);
+            if (index < 0) {
+                subjectList.push(item);
+            }
+        });
     }
 
 
@@ -120,13 +118,6 @@
         return -1;
     }
 
-    function copyArr(arr) {
-        let res = [];
-        for (let i = 0; i < arr.length; i++) {
-            res.push(arr[i])
-        }
-        return res
-    }
 </script>
 
 <style>
