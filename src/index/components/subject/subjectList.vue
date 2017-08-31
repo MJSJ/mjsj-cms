@@ -24,16 +24,69 @@
             </el-table-column>
     
         </el-table>
+        <el-dialog title="专题详情页" :visible.sync="dialogFormVisible" size="large">
+            <div class="tag_area">
+                <div class="tag_cell">
+                <el-tag type="primary">版本标识</el-tag>
+                <el-tag type="success">1.0.0</el-tag>
+            </div>
+            <div class="tag_cell">
+                <el-tag type="primary">拥有者</el-tag>
+                <el-tag type="success">火火的锅</el-tag>
+            </div>
+            </div>
+            <div class="version_area">
+                <div class="text_area">
+                    放置的代码片段
+                </div>
+                <div class="select_area">
+                    <el-form :model="form">
+                    <el-form-item label="历史版本" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择历史版本">
+                        <el-option label="版本1.0.0" value="shanghai"></el-option>
+                    <el-option label="版本1.0.1" value="shanghai"></el-option>
+                    <el-option label="版本1.0.2" value="shanghai"></el-option>
+                    </el-select>
+                    </el-form-item> 
+                </el-form>
+                </div>
+            </div>
+            
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogFormVisible = false">保 存</el-button>
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+
+            </div>
+        </el-dialog>
+
+
     </div>
 </template>
 
 <script>
 import { SUBJECT_ITEM } from "../../../common/api/url.js"
 import {mapState} from 'vuex' 
+import subjectDialog from "./components/subjectDialog.vue"
 export default {
     data() {
-        return {
+        return {      
+                dialogFormVisible: false,
+                title:'专题详情页',
+                form: {
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                },
+                formLabelWidth: '120px'
         }
+    },
+    components:{
+        'subjectDialog':subjectDialog
     },
     methods: {
         deleteSubject(){
@@ -43,7 +96,10 @@ export default {
         //下面的代码是之前跳转的页面的逻辑，
         //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {
-            window.location.href = SUBJECT_ITEM + "?subjectId=" + row.id;
+           // window.location.href = SUBJECT_ITEM + "?subjectId=" + row.id;
+           console.log(index);
+           console.log(row);
+            this.dialogFormVisible = true;
         },
         handleDelete(index, row) {
             this.$confirm('确认删除？')
@@ -71,6 +127,27 @@ export default {
 <style lang="less" rel="stylesheet/less">
 .subject_list {
     max-width: 780px;
+    .tag_area{
+        display: flex;
+        margin-bottom: 20px;
+        .tag_cell{
+            flex: 1
+        }
+    }
+    .version_area{
+        display: flex;
+        min-height: 400px;
+        .text_area{
+            flex: 2;
+            background: #ccc;
+        }
+        .select_area{
+            flex: 1
+        }
+    }
+    .dialog-footer{
+        text-align: center;
+    }
 }
 
 .el-form-item__content {
@@ -116,4 +193,8 @@ export default {
         }
     }
 }
+
+
+
+
 </style>
