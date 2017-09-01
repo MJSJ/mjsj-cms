@@ -15,8 +15,8 @@
 
                 <el-table-column label="专题">
                     <template scope="scope">
-                        <el-button size="small" type="text" v-for="item in scope.row.subjectList" v-text="item.name"
-                                   v-show="item.isChecked"></el-button>
+                        <el-button size="small" type="text" v-for="item in scope.row.subjectList"
+                                   v-text="item.name" v-if="item.isChecked"></el-button>
                     </template>
                 </el-table-column>
 
@@ -31,7 +31,8 @@
         </div>
 
         <el-dialog title="编辑"
-                   :visible.sync="dialogFormVisible"
+                   v-if="dialogFormVisible"
+                   :visible.sync="true"
                    size="tiny"
                    :show-close=false>
             <el-form :model="form">
@@ -45,14 +46,17 @@
                     <el-input v-model="form.password" auto-complete="off" class="edit_input"></el-input>
                 </el-form-item>
                 <el-form-item label="专题" :label-width="formLabelWidth">
-                    <el-checkbox v-for="item in form.subjectList" :label="item.name"
-                                 :checked="item.isChecked"></el-checkbox>
+                    <el-checkbox v-for="(item,index) in form.subjectList"
+                                 :label="item"
+                                 :checked="item.isChecked"
+                                 @change="handleCheckedTopicsChange(index)">{{item.name}}--{{index}}
+                    </el-checkbox>
                 </el-form-item>
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button @click="handleEditCancel">取 消</el-button>
+                <el-button type="primary" @click="handleEditConfirm">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -60,6 +64,24 @@
 
 <script>
     import {mapState} from 'vuex'
+
+    function Topic(id, name, isChecked) {
+        this.id = id;
+        this.name = name;
+        this.isChecked = isChecked
+    }
+
+    function Form(id, role, name, password, subjectList) {
+        this.id = id;
+        this.role = role;
+        this.name = name;
+        this.password = password;
+        this.subjectList = subjectList;
+    }
+
+    let currentForm = {};
+    let isAddUser = false;
+    let indexWhichClicked = 0;
 
     export default {
         components: {},
@@ -89,13 +111,57 @@
         },
         methods: {
             handleEdit: function (index, row) {
-                this.form = this.userList[index];
+                this.showDialog();
+                indexWhichClicked = index;
+                this.changeEditForm(this.userList[index]);
                 console.log(this.form);
-                this.dialogFormVisible = true;
+            },
+            handleDelete(index, row) {
+                this.userList.splice(index, 1);
             },
             handleAdd() {
-                this.dialogFormVisible = true;
+                this.showDialog();
+                this.changeEditForm(new Form("", "", "", "", this.totalTopics));
+                isAddUser = true;
             },
+            handleCheckedTopicsChange(index) {
+                this.form.subjectList[index].isChecked = !this.form.subjectList[index].isChecked;
+                console.log(index)
+            },
+
+            changeEditForm(form) {
+                currentForm = new Form(form.id, form.role, form.name, form.password, this.createNewSubjectList(form.subjectList));
+                this.form = currentForm;
+            },
+
+            createNewSubjectList(subjectList) {
+                let newSubjectList = [];
+                subjectList.forEach((item) => {
+                    newSubjectList.push(new Topic(item.id, item.name, item.isChecked));
+                });
+                return newSubjectList;
+            },
+
+            handleEditConfirm() {
+                if (isAddUser) {
+                    this.userList.push(currentForm);
+                } else {
+                    this.userList[indexWhichClicked] = currentForm;
+                }
+                this.dismissDialog();
+            },
+
+            handleEditCancel() {
+                this.dismissDialog();
+            },
+
+            dismissDialog() {
+                this.dialogFormVisible = false;
+                isAddUser = false;
+            },
+            showDialog() {
+                this.dialogFormVisible = true;
+            }
         }
     }
 
@@ -103,7 +169,8 @@
         totalTopics.forEach((item) => {
             let index = findTopic(item.name, subjectList);
             if (index < 0) {
-                subjectList.push(item);
+                let topic = new Topic(item.id, item.name, item.isChecked);
+                subjectList.push(topic);
             }
         });
     }
