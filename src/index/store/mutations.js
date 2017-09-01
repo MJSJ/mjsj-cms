@@ -6,7 +6,6 @@ export const fetchSubjectList = (state, payload) => {
     state.subjectList = payload;
 };
 
-<<<<<<< HEAD
 export const fetchUserList = (state, payload) => {
     state.userList = payload;
 };
@@ -16,10 +15,6 @@ export const fetchTotalTopics = (state, payload) => {
 };
 
 export const fetchSubject = (state, payload) => {
-=======
-export const fetchSubject = (state,payload)=>{
-    // console.log(payload);
->>>>>>> c0334cffb5403fe126ce1ae40a5c88c3a99cdfa7
     state.subject = payload;
 }
 
