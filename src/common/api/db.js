@@ -42,9 +42,16 @@ export const subjectList =  [
 ]
 
 
+
+
 export const result = {
-    
+    code:"200",
+    data:{success:true}
 }
+
+
+
+
 
 export const subject = {
     name:"subjectname1",

@@ -28,26 +28,26 @@
             <div class="tag_area">
                 <div class="tag_cell">
                 <el-tag type="primary">版本标识</el-tag>
-                <el-input v-model="input" :placeholder="subject.history[0].tag"  :disabled="inputVisibal"></el-input>
+                <el-input v-if="subject!=undefined" v-model="input" :placeholder="currentData.tag"  :disabled="inputVisibal"></el-input>
                  <el-button type="info" @click="editVersion">编辑</el-button>
             </div>
             <div class="tag_cell">
                 <el-tag type="primary">拥有者</el-tag>
-                <el-tag type="success">{{subject.owner.name}}</el-tag>
+                <el-tag type="success" v-if="subject.owner&&subject.owner.name">{{subject.owner.name}}</el-tag>
             </div>
             </div>
             <div class="version_area">
-                <div class="text_area">
-                    {{subject}}
+                <div class="text_area" v-if="subject">
+                    {{currentData.content}}
                 </div>
                 <div class="select_area">
-                    <el-form :model="form">
-                    <el-form-item label="历史版本" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择历史版本">
-                        <el-option v-if="subjecty.history.length > 0"  v-for="item in subjecty.history"  :key="item.id" :label="item.tag" value="shanghai"></el-option>
-                    </el-select>
-                    </el-form-item> 
-                </el-form>
+                    <el-form>
+                        <el-form-item label="历史版本" :label-width="formLabelWidth">
+                            <el-select v-model="valueOption" placeholder="请选择历史版本" @change="switchVersion(valueOption)">
+                                <el-option  v-for="(item,index) in subject.history"  :key="item.id" :label="item.tag" :value="item.tag"></el-option>
+                            </el-select>
+                        </el-form-item> 
+                    </el-form>
                 </div>
             </div>
             
@@ -67,9 +67,6 @@ import { SUBJECT_ITEM } from "../../../common/api/url.js"
 import {mapState} from 'vuex' 
 import subjectDialog from "./components/subjectDialog.vue"
 export default {
-    activated () {
-        
-    },
     data() {
         return {      
                 dialogFormVisible: false,
@@ -77,25 +74,10 @@ export default {
                 editWord:'编辑', 
                 input:'',
                 title:'专题详情页',
-                form: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                },
+                valueOption:'',                  //这里也必须先定义，当前option的value
+                currentData:[],          //当前数据
                 formLabelWidth: '120px',
-                dialogData:[
-                    {name:'a'},
-                    {name:'b'}
-                ]        
                     
-
-                
-
         }
     },
     components:{
@@ -110,11 +92,13 @@ export default {
         //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {
            // window.location.href = SUBJECT_ITEM + "?subjectId=" + row.id;
-           console.log(index);
-           console.log(row);
-           this.dialogFormVisible = true;
-           this.$store.dispatch("fetchSubject");
+          
+            this.dialogFormVisible = true;
+            console.log(this.subject);
+            this.currentData = this.subject.history[0];
 
+          
+           
         },
         handleDelete(index, row) {
             this.$confirm('确认删除？')
@@ -129,11 +113,23 @@ export default {
             console.log(1)
             console.log(this.subject,1)
         },
+        switchVersion(v){
+            console.log(v);  //这里能拿到当前option的value值，但是index拿不到，只有去json里面遍历
+            var length = this.subject.history.length;
+            for(var i=0;i<length;i++){
+                if(v == this.subject.history[i].tag){
+                    this.currentData = this.subject.history[i];
+                }
+            }
+            console.log(this.currentData)
+            
+        },
+
     },
     mounted() {
-
+        this.$store.dispatch("fetchSubject");
     },
-
+    
     //通过mapState方法，
     //直接从根store里取
     computed: mapState({ 
@@ -165,7 +161,7 @@ export default {
                     margin-right: 10px;
                 }
                 .el-input{
-                    width: 90px;
+                    width: 120px;
                     margin-right: 10px;
                 }
                 
