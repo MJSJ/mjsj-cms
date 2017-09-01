@@ -54,11 +54,15 @@ export const subject = {
     history: [
         {
             tag: "v1",
-            content: "<div>v1的代码</div>"
+            content: "<div>v1的代码</div>",
+            time:"11:11 2017/08/08",
+            userName:"公司A"
         },
         {
-            tag: "v1",
-            content: "<div>v1的代码</div>"
+            tag: "v2",
+            content: "<div>v2的代码</div>",
+            time:"11:11 2017/08/09",
+            userName:"公司B"
         },
     ]
 }
