@@ -28,17 +28,17 @@
             <div class="tag_area">
                 <div class="tag_cell">
                 <el-tag type="primary">版本标识</el-tag>
-                <el-input  v-model="versionValue" :placeholder="currentData.tag"  :disabled="inputDisabled1"></el-input>
+                <el-input  v-model="versionValue" :placeholder="currentData.data.tag"  :disabled="inputDisabled1"></el-input>
                 <el-button type="info" @click="editVersion">编辑</el-button>
             </div>
             <div class="tag_cell">
                 <el-tag type="primary">拥有者</el-tag>
-                <el-input v-model="ownerValue" type="success" v-if="subject.owner&&subject.owner.name" :placeholder="subject.owner.name" :disabled="inputDisabled2"></el-input>
+                <el-input v-model="ownerValue" type="success" :placeholder="currentData.owner" :disabled="inputDisabled2"></el-input>
             </div>
             </div>
             <div class="version_area">
-                <div class="text_area">
-                    {{currentData.content}}
+                <div class="text_area" >
+                    <div v-if="currentData!=null">{{currentData.data.content}}</div>                  
                 </div>
                 <div class="select_area" v-if="selectVisibal">
                     <el-form>
@@ -77,7 +77,10 @@ export default {
                 ownerValue:'' ,                   //公司
                 title:'专题详情页',
                 valueOption:'',                  //这里也必须先定义，当前option的value
-                currentData:[],                  //当前数据
+                currentData:{
+                    owner:'',
+                    data:[]
+                },                  //当前数据
                 formLabelWidth: '120px',
                 
         }
@@ -95,10 +98,13 @@ export default {
         handleEdit(index, row) {
           
             this.dialogFormVisible = true;
-            console.log(this.subject);
-            this.currentData = this.subject.history[0];
-
-          
+            this.currentData.data = this.subject.history[0];
+            this.currentData.owner = this.subject.owner.name;
+            this.selectVisibal = true;
+            this.inputDisabled1 = true;
+            this.inputDisabled2 = true;
+            this.wordSwitch = "编辑"
+         
            
         },
         handleDelete(index, row) {
@@ -110,7 +116,7 @@ export default {
                 .catch(_ => { });
         },
         editVersion(){
-            this.inputVisibal = false;
+            this.inputDisabled1 = false;
             console.log(1)
             console.log(this.subject,1)
         },
@@ -119,14 +125,27 @@ export default {
             var length = this.subject.history.length;
             for(var i=0;i<length;i++){
                 if(v == this.subject.history[i].tag){
-                    this.currentData = this.subject.history[i];
+                    this.currentData.data = this.subject.history[i];
                 }
             }
             console.log(this.currentData)
             
         },
         handleNewAndSave(){
-            this.dialogFormVisible = false;
+            //this.dialogFormVisible = false;
+            this.wordSwitch = "保存";
+        },
+        //新增清空当前显示的数据，隐藏版本记录栏
+        handleAdd(){
+            this.currentData.data = [];
+            this.dialogFormVisible = true;
+            this.inputDisabled1 = false;
+            this.inputDisabled2 = false;
+            this.selectVisibal = false;
+            this.versionValue = '',                 
+            this.ownerValue = '' ,  
+            this.wordSwitch = "保存"
+               
         }
     },
     mounted() {
