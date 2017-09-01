@@ -134,6 +134,7 @@ export default {
         handleNewAndSave(){
             //this.dialogFormVisible = false;
             this.wordSwitch = "保存";
+            console.log("测试分支上传")
         },
         //新增清空当前显示的数据，隐藏版本记录栏
         handleAdd(){
@@ -255,7 +256,6 @@ export default {
     }
 
 }
-
 
 
 
