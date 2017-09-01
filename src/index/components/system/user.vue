@@ -55,6 +55,7 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
+                <p v-show="isShowWarning" v-text="warningHint" style="color: red;"></p>
                 <el-button @click="handleEditCancel">取 消</el-button>
                 <el-button type="primary" @click="handleEditConfirm">确 定</el-button>
             </div>
@@ -90,6 +91,8 @@
                 dialogFormVisible: false,
                 form: {},
                 formLabelWidth: '60px',
+                warningHint: "",
+                isShowWarning: false,
             }
         },
         computed: mapState({
@@ -117,7 +120,13 @@
                 console.log(this.form);
             },
             handleDelete(index, row) {
-                this.userList.splice(index, 1);
+                this.$confirm('确认删除？')
+                    .then(_ => {
+                        this.userList.splice(index, 1);
+//                        this.$store.dispatch("deleteSubject", { subjectID: row.id });
+                    })
+                    .catch(_ => {
+                    });
             },
             handleAdd() {
                 this.showDialog();
@@ -144,9 +153,16 @@
 
             handleEditConfirm() {
                 if (isAddUser) {
+                    if (currentForm.id === "" || currentForm.name === "" || currentForm.password === "") {
+                        this.warningHint = "输入框不能为空";
+                        this.isShowWarning = true;
+                        return;
+                    }
+                    this.isShowWarning = false;
                     this.userList.push(currentForm);
                 } else {
-                    this.userList[indexWhichClicked] = currentForm;
+                    this.$set(this.userList, indexWhichClicked, currentForm);
+//                    this.userList.splice(indexWhichClicked, 1, currentForm);
                 }
                 this.dismissDialog();
             },
@@ -161,6 +177,7 @@
             },
             showDialog() {
                 this.dialogFormVisible = true;
+                this.isShowWarning = false;
             }
         }
     }
