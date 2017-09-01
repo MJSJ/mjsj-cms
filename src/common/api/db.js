@@ -42,9 +42,23 @@ export const subjectList = [
 ]
 
 
+<<<<<<< HEAD
 export const result = {}
+=======
+
+
+export const result = {
+    code:"200",
+    data:{success:true}
+}
+>>>>>>> c0334cffb5403fe126ce1ae40a5c88c3a99cdfa7
+
+
+
+
 
 export const subject = {
+<<<<<<< HEAD
     name: "subjectname",
     id: 111,
     tag: "版本标识",
@@ -59,6 +73,26 @@ export const subject = {
         {
             tag: "v1",
             content: "<div>v1的代码</div>"
+=======
+    name:"subjectname1",
+    id:111,
+    owner:{
+        name:"拥有者(火火)",
+    },
+
+    history:[
+        {   id:1,
+            tag:"版本标识2.0",
+            content:"<div>v1的代码</div>",
+            userName:"huohuo1",
+            time:"11:11 2017/08/08"
+        },
+        {   id:2,
+            tag:"版本标识3.0",
+            content:"<div>v2的代码</div>",
+            userName:"huohuo2",
+            time:"11:11 2017/08/08"
+>>>>>>> c0334cffb5403fe126ce1ae40a5c88c3a99cdfa7
         },
     ]
 }

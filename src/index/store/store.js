@@ -16,6 +16,7 @@ export default function generateStore(baseargs){
             currentView: '',
             tabs: tabs,
             historyTabs: [],
+            subject:null
         },
         mutations,
         actions,
