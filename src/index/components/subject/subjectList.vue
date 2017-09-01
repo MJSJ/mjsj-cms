@@ -1,7 +1,7 @@
 <template>
     <div class="subject_list">
-        <el-table border :data="subjectList" style="width: 100%">
-    
+        <el-button size="small" type="success" @click="handleAdd()">新增</el-button>
+        <el-table border :data="subjectList" style="width: 100%">  
             <el-table-column prop="id" label="ID" width="120">
             </el-table-column>
     
@@ -28,19 +28,19 @@
             <div class="tag_area">
                 <div class="tag_cell">
                 <el-tag type="primary">版本标识</el-tag>
-                <el-input v-if="subject!=undefined" v-model="input" :placeholder="currentData.tag"  :disabled="inputVisibal"></el-input>
-                 <el-button type="info" @click="editVersion">编辑</el-button>
+                <el-input  v-model="versionValue" :placeholder="currentData.tag"  :disabled="inputDisabled1"></el-input>
+                <el-button type="info" @click="editVersion">编辑</el-button>
             </div>
             <div class="tag_cell">
                 <el-tag type="primary">拥有者</el-tag>
-                <el-tag type="success" v-if="subject.owner&&subject.owner.name">{{subject.owner.name}}</el-tag>
+                <el-input v-model="ownerValue" type="success" v-if="subject.owner&&subject.owner.name" :placeholder="subject.owner.name" :disabled="inputDisabled2"></el-input>
             </div>
             </div>
             <div class="version_area">
-                <div class="text_area" v-if="subject">
+                <div class="text_area">
                     {{currentData.content}}
                 </div>
-                <div class="select_area">
+                <div class="select_area" v-if="selectVisibal">
                     <el-form>
                         <el-form-item label="历史版本" :label-width="formLabelWidth">
                             <el-select v-model="valueOption" placeholder="请选择历史版本" @change="switchVersion(valueOption)">
@@ -52,9 +52,8 @@
             </div>
             
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogFormVisible = false">保 存</el-button>
+                <el-button type="primary" @click="handleNewAndSave">{{wordSwitch}}</el-button>
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-
             </div>
         </el-dialog>
 
@@ -69,15 +68,18 @@ import subjectDialog from "./components/subjectDialog.vue"
 export default {
     data() {
         return {      
-                dialogFormVisible: false,
-                inputVisibal:true,
-                editWord:'编辑', 
-                input:'',
+                dialogFormVisible: false, 
+                inputDisabled1:true,
+                inputDisabled2:true,
+                selectVisibal:true,
+                wordSwitch:'编辑', 
+                versionValue:'',                  //版本号
+                ownerValue:'' ,                   //公司
                 title:'专题详情页',
                 valueOption:'',                  //这里也必须先定义，当前option的value
-                currentData:[],          //当前数据
+                currentData:[],                  //当前数据
                 formLabelWidth: '120px',
-                    
+                
         }
     },
     components:{
@@ -91,7 +93,6 @@ export default {
         //下面的代码是之前跳转的页面的逻辑，
         //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {
-           // window.location.href = SUBJECT_ITEM + "?subjectId=" + row.id;
           
             this.dialogFormVisible = true;
             console.log(this.subject);
@@ -104,7 +105,7 @@ export default {
             this.$confirm('确认删除？')
                 .then(_ => {
                     console.log(index, row);
-                    this.$store.dispatch("deleteSubject", { subjectID: row.id })
+                    this.$store.dispatch("deleteSubject", { subjectID: row.id });
                 })
                 .catch(_ => { });
         },
@@ -124,7 +125,9 @@ export default {
             console.log(this.currentData)
             
         },
-
+        handleNewAndSave(){
+            this.dialogFormVisible = false;
+        }
     },
     mounted() {
         this.$store.dispatch("fetchSubject");
@@ -144,6 +147,12 @@ export default {
 <style lang="less" rel="stylesheet/less">
 .subject_list {
      max-width: 780px;
+     .el-button--success{
+        width: 90px;
+        height: 50px;
+        margin-bottom: 12px;
+        font-size: 20px;
+     }
     .el-dialog{
         .el-dialog__header{
             padding-bottom: 10px;
@@ -182,50 +191,50 @@ export default {
             text-align: center;
         }
     }
-}
-
-.el-form-item__content {
-    text-align: left;
-}
-
-.time_to {
-    text-align: center;
-}
-
-.time_sync {
-    margin-left: 1em;
-}
-
-.product_confirm {
-    margin-left: 1em;
-}
-
-.baseinfo {
-    margin-top: 20px;
-}
-
-.s_item {
-    &:after {
-        content: "、";
-        display: inline-block;
+    .el-form-item__content {
+        text-align: left;
     }
-    &:last-child {
+
+    .time_to {
+        text-align: center;
+    }
+
+    .time_sync {
+        margin-left: 1em;
+    }
+
+    .product_confirm {
+        margin-left: 1em;
+    }
+
+    .baseinfo {
+        margin-top: 20px;
+    }
+
+    .s_item {
         &:after {
-            content: "";
+            content: "、";
+            display: inline-block;
+        }
+        &:last-child {
+            &:after {
+                content: "";
+            }
         }
     }
-}
 
-.semi {
-    &:after {
-        content: ";";
-        display: inline-block;
-    }
-    &:last-child {
+    .semi {
         &:after {
-            content: "";
+            content: ";";
+            display: inline-block;
+        }
+        &:last-child {
+            &:after {
+                content: "";
+            }
         }
     }
+
 }
 
 
