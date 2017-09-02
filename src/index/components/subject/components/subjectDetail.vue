@@ -3,7 +3,7 @@
         <div class="tag_area">
             <div class="tag_cell">
             <el-tag type="primary">版本标识</el-tag>
-            <el-input  v-model="versionValue" :placeholder="currentData.data.tag"  :disabled="inputEditable"></el-input>
+            <el-input  v-model="versionValue" :placeholder="currentData.data.tag"  :disabled="dialogFormVisible"></el-input>
         </div>
         <div class="tag_cell">
             <el-tag type="primary">拥有者</el-tag>
@@ -11,10 +11,10 @@
         </div>
         </div>
         <div class="version_area">
-            <div class="text_area" >
+            <div class="text_area">
                 <article ref="code" id="code"></article>
             </div>
-            <div class="select_area" v-if="historyVisible">
+            <div class="select_area">
                 <el-form>
                     <el-form-item label="历史版本" :label-width="formLabelWidth">
                         <el-select v-model="valueOption" placeholder="请选择历史版本" @change="switchVersion(valueOption)">
@@ -23,6 +23,7 @@
                     </el-form-item> 
                 </el-form>
             </div>
+            <!-- <historyVersion :historyData="historyData"><historyVersion/>   -->
         </div>
         
         <div slot="footer" class="dialog-footer">
@@ -34,7 +35,11 @@
 
 <script>
 import {mapState} from 'vuex' 
+//import historyVersion from './historyVersion.vue'
 export default {
+    conponents:{
+        //'historyVersion':historyVersion
+    },
     data() {
         return {
             
@@ -43,7 +48,6 @@ export default {
             //看看下面哪些不要
 
             dialogFormVisible: false, 
-            inputEditable:true,
             wordSwitch:'编辑', 
             versionValue:'',                  //版本号
             ownerValue:'' ,                   //公司
@@ -78,6 +82,8 @@ export default {
         handleNewAndSave(){
             //this.dialogFormVisible = false;
             this.wordSwitch = "保存";
+            console.log(this.subject)
+            console.log(this.currentData)
         },
         //新增清空当前显示的数据，隐藏版本记录栏
         initCode(){
@@ -100,17 +106,24 @@ export default {
     mounted() {
         this.$nextTick(()=>{
             this.initCode()
-        })
-        this.$store.dispatch("fetchSubject",{id:this.subjectID});
+        });
+        this.$store.dispatch("fetchSubject",{id:this.subjectID});       
     },
-    
     //通过mapState方法，
     //直接从根store里取
-    computed: mapState({ 
-        subjectList: 'subjectList',
-        subject:'subject',
-        loginUser:'loginUser'
-    })  
+    computed:{
+           ...mapState({ 
+            subjectList: 'subjectList',
+            subject:'subject',
+            loginUser:'loginUser'
+        }),
+        currentData(){
+            return{
+                owner:this.subject&&this.subject.owner&&this.subject.owner.name,
+                data:this.subject&&this.subject.history&&this.subject.history[0]
+            }
+        } 
+    } 
 
 }
 </script>
@@ -133,6 +146,7 @@ export default {
         .tag_area{
             display: flex;
             margin-bottom: 20px;
+            max-width:70%;
             .tag_cell{
                 display: flex;
                 flex: 1;
