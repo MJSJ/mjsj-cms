@@ -9,26 +9,19 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="email=no"/>
     <link rel="stylesheet" href="./static/index.css">
-
+    <!-- <script src="http://libs.cdnjs.net/codemirror/5.9.0/codemirror.min.js"></script>
+    <script src="http://libs.cdnjs.net/codemirror/5.9.0/keymap/sublime.min.js"></script>
+    <link rel="stylesheet" href="http://libs.cdnjs.net/codemirror/5.9.0/codemirror.min.css"> -->
+    <!-- <link href="https://cdn.bootcss.com/codemirror/5.29.0/theme/monokai.css" rel="stylesheet"> -->
+  
+    <link rel="stylesheet" href="./code/codemirror.css">
+    <link rel="stylesheet" href="./code/monokai.css">
+    <link rel="stylesheet" href="./code/foldgutter.css">
+    <script src="./code/codemirror.js"></script>
+    <script src="./code/sublime.js"></script>
 </head>
 <body>
-        <div id="container"></div>      
-        <script src="./monaco-editor/min/vs/loader.js"></script>
-        <script>
-            require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
-            require(['vs/editor/editor.main'], function() {
-                var editor = monaco.editor.create(document.getElementById('container'), {
-                    value: [
-                        'function x() {',
-                        '\tconsole.log("Hello world!");',
-                        '}'
-                    ].join('\n'),
-                    language: 'javascript'
-                });
-            });
-        </script>
-    
-<div id="app" style="display:none"></div>
+<div id="app"></div>
 
 
 <script type="text/javascript" src="./static/vendor.js"></script>

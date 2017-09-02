@@ -27,6 +27,10 @@ export const setCurrentView = (state, view) => {
     }
 };
 
+export const setSelectedSubject = (state,paylod) =>{
+    state.selectedSubject = payload
+}
+
 export const removeCurrentView = (state, view) => {
     let ind = state.historyTabs.findIndex(item => item.id === view);
     if (ind > -1) {
