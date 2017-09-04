@@ -4,21 +4,25 @@ import fetchJsonp from "fetch-jsonp"
 
 function _get(url,baseargs){
     return new Promise((resolve,reject)=>{
-        fetch(url+(baseargs?('?'+qs.stringify(baseargs)):''),{
-            credentials:'include',
-            headers: {
-                'Content-Type': 'json'
-            }
-        })
-        .then((data)=>{
-            return data.json()
-        })
-        .then((res)=>{
-            resolve(res.data)
-        })
-        .catch(e=>{
-            console.error(e)
-        })
+        console.log(resolve);
+        console.log(url);
+        console.log(baseargs)
+        console.log(url+(baseargs?('?'+qs.stringify(baseargs)):''))
+        // fetch(url+(baseargs?('?'+qs.stringify(baseargs)):''),{
+        //     credentials:'include',
+        //     headers: {
+        //         'Content-Type': 'json'
+        //     }
+        // })
+        // .then((data)=>{
+        //     return data.json()
+        // })
+        // .then((res)=>{
+        //     resolve(res.data)
+        // })
+        // .catch(e=>{
+        //     console.error(e)
+        // })
     })
     
   
@@ -44,7 +48,8 @@ function _post(url,baseargs){
         fetch(url,{
             credentials:'include',
             method:'POST',
-            body:_mergePostData(baseargs),
+            //body:_mergePostData(baseargs),
+            body:JSON.stringify(baseargs),        
             headers: {
                 'Content-Type': 'json'
             }

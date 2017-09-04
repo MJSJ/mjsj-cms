@@ -23,7 +23,8 @@ export default function generateStore(baseargs){
             },
             userList:{
                 
-            }
+            },
+            addSubject:null
         },
         mutations,
         actions,

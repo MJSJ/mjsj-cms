@@ -17,6 +17,22 @@ export const fetchSubject = (context,args)=>{
     })
 }
 
+export const updateSubject = (context,args)=>{
+    api.updateSubject(args).then((data)=>{
+        context.commit("updateSubject",data)
+        console.log(data)
+        if(data.success){
+            context.dispatch("fetchSubjectList");
+            window.vm.$message("删除成功");
+        }else{
+            window.vm.$message.error('删除失败');
+        }
+        
+    })
+}
+
+
+
 export const deleteSubject = (context,args) => {
     api.deleteSubject(args).then((data)=>{
         //删除成功后重新发起拉取list的action

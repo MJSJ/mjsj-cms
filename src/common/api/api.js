@@ -7,15 +7,15 @@ const GET_URLS = {
      fetchSubjectList:HOST+"/cms/fetchSubjectList",
      fetchSubject:HOST+"/cms/fetchSubject",
      getShopBoard:HOST+"/joy/merchant/getshopboard",
-    //  fetchUserList:HOST+"/cmc/fetchUserList",
-    //  fetchTotalTopics:HOST+"/cms/fetchTotalTopics"
+      fetchUserList:HOST+"/cmc/fetchUserList",
+      fetchTotalTopics:HOST+"/cms/fetchTotalTopics"
 }
 const POST_URLS = {
      newUploadImage:HOST+"/joy/merchant/newuploadimage",
 
-     deleteSubject:HOST+"/cms/deleteSubject"
+     deleteSubject:HOST+"/cms/deleteSubject",
 
-     //updateSubject:HOST+"/cms/updateSubject"   
+     updateSubject:HOST+"/cms/updateSubject"   
 }
 
 const JSONP_URLS = {
@@ -33,8 +33,8 @@ const LOCAL_URLS = {
 }
 
 const api = {
-    //...all(GET_URLS, POST_URLS, JSONP_URLS),
-    ...local(LOCAL_URLS)//将请求mock到本地，有线上接口后注释本行
+    ...all(GET_URLS, POST_URLS, JSONP_URLS),
+    //...local(LOCAL_URLS)//将请求mock到本地，有线上接口后注释本行
 }
 
 export default api

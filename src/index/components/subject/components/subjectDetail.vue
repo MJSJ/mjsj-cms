@@ -100,6 +100,7 @@ export default {
             if(this.wordSwitch == "保存"){
                 if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
                     this.$store.dispatch("updateSubject",{subjectName:this.nameValue,content:content,tag:this.versionValue});
+                    return false;
                 }else{
                     this.$confirm("请确认录入信息完整！")
                     .then(_=>{
