@@ -1,25 +1,34 @@
 <template>
-    <el-dialog :visible.sync="true" title="专题详情页" size="large">
+    <el-dialog :visible.sync="true" title="专题详情页" size="large" :show-close="false">
         <div class="tag_area">
             <div class="tag_cell">
-            <el-tag type="primary">版本标识</el-tag>
-            <el-input  v-model="versionValue" :placeholder="currentData.data.tag"  :disabled="dialogFormVisible"></el-input>
-        </div>
-        <div class="tag_cell">
-            <el-tag type="primary">拥有者</el-tag>
-            <el-input v-model="ownerValue" type="success" :placeholder="currentData.owner" :disabled="loginUser.role==1"></el-input>
-        </div>
+                <el-tag type="primary">专题名字</el-tag>
+                <el-input  v-model="nameValue" :placeholder="currentData&&currentData.name"  :disabled="inputaDisabled"></el-input>
+            </div>
+            <div class="tag_cell">
+                <el-tag type="primary">版本标识</el-tag>
+                <el-input  v-model="versionValue" :placeholder="currentData&&currentData.data&&currentData.data.tag"  :disabled="inputaDisabled"></el-input>
+            </div>
+            <div class="tag_cell">
+                <el-tag type="primary">拥有者</el-tag>
+                <el-input v-model="ownerValue" type="success" :placeholder="currentData&&currentData.owner" :disabled="loginUser.role==1"></el-input>
+            </div>
         </div>
         <div class="version_area">
             <div class="text_area">
                 <article ref="code" id="code"></article>
             </div>
-            <div class="select_area">
+            <div class="select_area" v-if="historyVisible">
                 <el-form>
-                    <el-form-item label="历史版本" :label-width="formLabelWidth">
-                        <el-select v-model="valueOption" placeholder="请选择历史版本" @change="switchVersion(valueOption)">
+                    <el-form-item label="历史版本 : " :label-width="formLabelWidth">
+                        <!-- <el-select v-model="valueOption" placeholder="请选择历史版本" @change="switchVersion(valueOption)">
                             <el-option  v-for="(item,index) in subject.history"  :key="item.id" :label="item.tag" :value="item.tag"></el-option>
-                        </el-select>
+                        </el-select> -->
+                        <ul class="versionNameUl">
+                            <li @click="switchVersion(index)" class="versionNameLi"  v-for="(item,index) in subject.history"  :key="item.id">{{item.tag}}</li>                          
+                        </ul>
+                        <div class="">操作人：{{currentData.data.userName}}</div>
+                        <div class="time">时间：{{currentData.data.time}}</div>
                     </el-form-item> 
                 </el-form>
             </div>
@@ -41,54 +50,69 @@ export default {
         //'historyVersion':historyVersion
     },
     data() {
-        return {
-            
-            historyVisible:true,      
-
-            //看看下面哪些不要
-
+        return {               
             dialogFormVisible: false, 
-            wordSwitch:'编辑', 
+            inputaDisabled:false,
+            wordSwitch:'保存', 
+            nameValue:'',
             versionValue:'',                  //版本号
             ownerValue:'' ,                   //公司
             title:'专题详情页',
             valueOption:'',                  //这里也必须先定义，当前option的value
-            currentData:{
-                owner:'',
-                data:[]
-            },                  //当前数据
+            // currentData:{
+            //     owner:'',
+            //     data:[]
+            // },                  //当前数据
             formLabelWidth: '120px',
+            index:0,
+            readOnly:false,
+            showCursorWhenSelecting:false
         }
     },
     props:{
         subjectID:0
     },
     methods: {
-        switchVersion(v){
-            console.log(v);  //这里能拿到当前option的value值，但是index拿不到，只有去json里面遍历
-            var length = this.subject.history.length;
-            for(var i=0;i<length;i++){
-                if(v == this.subject.history[i].tag){
-                    let content = this.subject.history[i].content;
-                    this.currentData.data = this.subject.history[i];
-
-                    //设置编辑器里的代码
-                    this.editor.setValue(content)
-                }
-            }
-            console.log(this.currentData)
+        switchVersion(index){       
+            // console.log(index);
+            // console.log(this.currentData)
+            // this.currentData.data = this.subject.history[index];
+             let content = this.subject.history[index].content;       
+             this.editor.setValue(content);
+            // console.log(this.subject)
+            // console.log(this.currentData)
+            this.index = index;
+            console.log(this.index);
             
         },
         handleNewAndSave(){
-            //this.dialogFormVisible = false;
-            this.wordSwitch = "保存";
-            console.log(this.subject)
-            console.log(this.currentData)
+           // this.wordSwitch = "保存";
+            console.log(this.subjectID);
+            console.log(this.editor.getValue());
+            var content = this.editor.getValue();
+            if(this.wordSwitch == "编辑"){
+                this.wordSwitch = "保存";
+                this.readOnly = false;
+                this.inputaDisabled = false;
+                console.log(this.readOnly)
+                return false;
+            }
+            if(this.wordSwitch == "保存"){
+                if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
+                    this.$store.dispatch("updateSubject",{subjectName:this.nameValue,content:content,tag:this.versionValue});
+                }else{
+                    this.$confirm("请确认录入信息完整！")
+                    .then(_=>{
+                        console.log("确定")
+                    })
+                    .catch(_ =>{console.log("取消")})
+                }
+            }      
         },
         //新增清空当前显示的数据，隐藏版本记录栏
         initCode(){
             this.editor = CodeMirror(this.$refs.code, {
-                value: this.currentData.data.content||' ',
+                value: this.currentData&&this.currentData.data&&this.currentData.data.content||'',
                 lineNumbers: true,
                 mode: "text/html",
                 keyMap: "sublime",
@@ -96,18 +120,19 @@ export default {
                 matchBrackets: true,
                 showCursorWhenSelecting: true,
                 theme: "monokai",
-                tabSize: 4
+                tabSize: 4,
+                readOnly:this.readOnly
             });
         },
         hideDetial(){
             this.$emit('visibleListener', false)
-        }
+        },
     },
     mounted() {
+        this.$store.dispatch("fetchSubject",{subjectID:this.subjectID || ''});   
         this.$nextTick(()=>{
             this.initCode()
-        });
-        this.$store.dispatch("fetchSubject",{id:this.subjectID});       
+        }); 
     },
     //通过mapState方法，
     //直接从根store里取
@@ -118,16 +143,38 @@ export default {
             loginUser:'loginUser'
         }),
         currentData(){
-            return{
-                owner:this.subject&&this.subject.owner&&this.subject.owner.name,
-                data:this.subject&&this.subject.history&&this.subject.history[0]
+            if(this.subjectID!=0){
+                 return{
+                    owner:this.subject&&this.subject.owner&&this.subject.owner.name || '',
+                    name:this.subject&&this.subject.name|| '',
+                    data:this.subject&&this.subject.history&&this.subject.history[this.index] || []
+                }
             }
-        } 
-    } 
+        },
+        historyVisible(){
+            if(this.subjectID == 0){  
+               this.inputaDisabled = false;
+               return false
+            }else{
+                this.wordSwitch = "编辑";
+                this.inputaDisabled = true;
+                return  true;
+            }
+        },
+        readOnly(){
+            if(this.subjectID == 0){
+                return false;
+            }else{
+                return true;
+            }
+        }
 
+    },
+    watch:{
+        
+    } 
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" rel="stylesheet/less">
 .subject_list {
@@ -170,7 +217,18 @@ export default {
                 // background: #ccc;
             }
             .select_area{
-                flex: 1
+                flex: 1;
+                .versionNameUl{
+                    border: 1px solid #ccc;
+                    .versionNameLi{
+                        background-color:#f3f3f3;
+                        text-indent: 1em;   
+                        cursor: pointer;                    
+                    }
+                    .versionNameLi:hover{
+                        background-color: #e5e5e5;
+                    }
+                }
             }
         }
         .dialog-footer{
@@ -222,8 +280,4 @@ export default {
     }
 
 }
-
-
-
-
 </style>

@@ -21,7 +21,6 @@ export const deleteSubject = (context,args) => {
     api.deleteSubject(args).then((data)=>{
         //删除成功后重新发起拉取list的action
         console.log(data);
-        var data = data.data;
         if(data.success){
             context.dispatch("fetchSubjectList");
             window.vm.$message("删除成功");

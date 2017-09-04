@@ -17,7 +17,7 @@
     
             <el-table-column label="上次编辑" width="300">
                 <template scope="scope">
-                    <div slot="reference">
+                    <div slot="reference" v-if="scope.row.lastEdit">
                         {{scope.row.lastEdit.userName}}--{{scope.row.lastEdit.time}}
                     </div>
                 </template>
@@ -60,8 +60,11 @@ export default {
         //下面的代码是之前跳转的页面的逻辑，
         //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {
-            this.showDetail();
+            this.detailVisble = true;
             this.subjectID = row.id;
+            console.log(index);
+            console.log(row)
+            console.log(this.subjectID)
         },
         handleDelete(index, row) {
             this.$confirm('确认删除？')
@@ -72,7 +75,12 @@ export default {
                 .catch(_ => { });
         },
         showDetail(){
-            this.detailVisble = true;
+            this.subjectID = 0;
+            this.$nextTick(() =>{
+                 this.detailVisble = true;
+            })
+           
+           
         },
         visibleListener(value){
             this.detailVisble = value
@@ -81,13 +89,13 @@ export default {
     mounted() {
         // this.$store.dispatch("fetchSubject");
         //监听子组件的visible
-        
+        //console.log(this.subjectList)
     },
     
     //通过mapState方法，
     //直接从根store里取
     computed: mapState({ 
-        subjectList: 'subjectList',
+        subjectList:'subjectList',
         subject:'subject'
     })  
 

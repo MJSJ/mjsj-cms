@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="./code/codemirror.css">
     <link rel="stylesheet" href="./code/monokai.css">
     <link rel="stylesheet" href="./code/foldgutter.css">
+    <link href="https://cdn.bootcss.com/minireset.css/0.0.2/minireset.css" rel="stylesheet">
     <script src="./code/codemirror.js"></script>
     <script src="./code/sublime.js"></script>
 </head>
@@ -26,5 +27,23 @@
 
 <script type="text/javascript" src="./static/vendor.js"></script>
 <script type="text/javascript" src="./static/index.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $.ajax({
+            // url:"http://localhost:8081/cms/login",
+            url:"http://mykrystal.com/cms/login",
+            method:"POST",
+            // data:JSON.stringify({username:"juan-manuel@fangio.com",password:"aa"}),//错误密码
+            data:JSON.stringify({username:"yursile@hamilton.com",password:"ddd"}),//正确密码
+            dataType:'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            contentType:"application/json;charset=UTF-8"
+        }).then(function(data){
+            console.log(data)
+        })
+</script>
+
 </body>
 </html>

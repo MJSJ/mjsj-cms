@@ -14,7 +14,7 @@ function _get(url,baseargs){
             return data.json()
         })
         .then((res)=>{
-            resolve(res.respD)
+            resolve(res.data)
         })
         .catch(e=>{
             console.error(e)
@@ -54,7 +54,7 @@ function _post(url,baseargs){
         })
         .then((res)=>{
             
-            resolve(res.respD)
+            resolve(res.data)
         })
         .catch(e=>{
             console.error(e)
@@ -70,7 +70,7 @@ function _fetchJonp(url,baseargs){
             return data.json()
         })
         .then((res)=>{
-            resolve(res.respD)
+            resolve(res.data)
         })
         .catch(e=>{
             console.error(e)

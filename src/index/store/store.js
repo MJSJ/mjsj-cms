@@ -20,6 +20,9 @@ export default function generateStore(baseargs){
             selectedSubject:{},
             loginUser:{
                 role:1
+            },
+            userList:{
+                
             }
         },
         mutations,
