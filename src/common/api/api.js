@@ -2,22 +2,23 @@ import * as db from "./db.js"
 
 import {get, all, local} from "./tool.js"
 
-const HOST = "mykrystal.com"
+// const HOST = "//mykrystal.com"
+const HOST = "//localhost:8081"
 const GET_URLS = {
-    // fetchSubject:HOST+"/cms/fetchSubjectList"
-    // getShopBoard:HOST+"/joy/merchant/getshopboard",
+    fetchSubjectList: HOST+"/cms/fetchSubjectList",
+    logout:HOST+"/cms/logout",
 }
 const POST_URLS = {
-    // newUploadImage:HOST+"/joy/merchant/newuploadimage",
+    login:HOST+"/cms/login",
+    
 }
 
 const JSONP_URLS = {
-    // setShopBoard:HOST+'/joy/merchant/setshopboard'
 }
 
 //本地Mock数据
 const LOCAL_URLS = {
-    fetchSubjectList: db.subjectList,
+    // fetchSubjectList: db.subjectList,
     deleteSubject: db.result,
     fetchSubject: db.subject,
     fetchUserList: db.userList,

@@ -1,24 +1,23 @@
 import qs from "qs"
 import "whatwg-fetch"
 import fetchJsonp from "fetch-jsonp"
-
+import axios from "axios"
 function _get(url,baseargs){
     return new Promise((resolve,reject)=>{
-        fetch(url+(baseargs?('?'+qs.stringify(baseargs)):''),{
-            credentials:'include',
-            headers: {
-                'Content-Type': 'json'
-            }
-        })
-        .then((data)=>{
-            return data.json()
+
+        axios({
+            method: 'get',
+            url: url,
+            data: baseargs,
+            withCredentials: true
         })
         .then((res)=>{
-            resolve(res.respD)
+            resolve(res.data)
         })
         .catch(e=>{
             console.error(e)
         })
+      
     })
     
   
@@ -41,20 +40,14 @@ function _mergePostData(data) {
 
 function _post(url,baseargs){
     return new Promise((resolve,reject)=>{
-        fetch(url,{
-            credentials:'include',
-            method:'POST',
-            body:_mergePostData(baseargs),
-            headers: {
-                'Content-Type': 'json'
-            }
-        })
-        .then((data)=>{
-            return data.json()
+        axios({
+            method: 'post',
+            url: url,
+            data: baseargs,
+            withCredentials: true
         })
         .then((res)=>{
-            
-            resolve(res.respD)
+            resolve(res.data)
         })
         .catch(e=>{
             console.error(e)
