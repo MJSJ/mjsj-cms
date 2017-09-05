@@ -144,3 +144,6 @@ export const userList = [
         ]
     }
 ]
+
+export const updateSubject ={code:"200",data:{success:true}}
+

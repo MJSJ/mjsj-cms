@@ -96,7 +96,7 @@ if (env == "dev") {
     vueloadRule = {
         test: /\.vue$/,
         loader: 'vue-loader',
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
         options: {
             loaders: {
                 'css': "vue-style-loader!css-loader!postcss-loader",
@@ -108,7 +108,7 @@ if (env == "dev") {
     vueloadRule = {
         test: /\.vue$/,
         loader: 'vue-loader',
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
         options: {
             loaders: {
                 'css': ExtractTextPlugin.extract(cssOption),
