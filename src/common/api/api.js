@@ -2,8 +2,8 @@ import * as db from "./db.js"
 
 import {get, all, local} from "./tool.js"
 
-// const HOST = "//mykrystal.com"
-const HOST = "//localhost:8081"
+const HOST = "//mykrystal.com"
+// const HOST = "//localhost:8081"
 const GET_URLS = {
     fetchSubjectList: HOST+"/cms/fetchSubjectList",
     logout:HOST+"/cms/logout",
