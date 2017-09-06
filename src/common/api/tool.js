@@ -14,6 +14,9 @@ function _get(url,baseargs){
         .then((res)=>{
             resolve(res.data)
         })
+        .then((data)=>{
+            resolve(data.data)
+        })
         .catch(e=>{
             console.error(e)
         })
@@ -48,6 +51,9 @@ function _post(url,baseargs){
         })
         .then((res)=>{
             resolve(res.data)
+        })
+        .then((data)=>{
+            resolve(data.data)
         })
         .catch(e=>{
             console.error(e)
