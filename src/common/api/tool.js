@@ -12,7 +12,7 @@ function _get(url,baseargs){
             withCredentials: true
         })
         .then((res)=>{
-            resolve(res.data)
+            return res.data
         })
         .then((data)=>{
             resolve(data.data)
@@ -50,7 +50,7 @@ function _post(url,baseargs){
             withCredentials: true
         })
         .then((res)=>{
-            resolve(res.data)
+            return res.data
         })
         .then((data)=>{
             resolve(data.data)
