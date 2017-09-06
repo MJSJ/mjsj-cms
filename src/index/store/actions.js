@@ -7,6 +7,7 @@ export const fetchSubjectList = (context) => {
     api.fetchSubjectList().then((data)=>{
         // data => subjecList对象
         //提交一个mutation
+        console.log(data)
         context.commit("fetchSubjectList",data)
     })
 };

@@ -177,7 +177,7 @@ module.exports = {
         contentBase: HTML_PATH,
         historyApiFallback: false,
         hot: true,
-        port: 8080,
+        port: 1111,
         disableHostCheck: true,  // 失能域名检查
         publicPath: PUBLIC_PATH,
         noInfo: false,

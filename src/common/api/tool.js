@@ -1,28 +1,23 @@
 import qs from "qs"
 import "whatwg-fetch"
 import fetchJsonp from "fetch-jsonp"
-
+import axios from "axios"
 function _get(url,baseargs){
     return new Promise((resolve,reject)=>{
-        console.log(resolve);
-        console.log(url);
-        console.log(baseargs)
-        console.log(url+(baseargs?('?'+qs.stringify(baseargs)):''))
-        // fetch(url+(baseargs?('?'+qs.stringify(baseargs)):''),{
-        //     credentials:'include',
-        //     headers: {
-        //         'Content-Type': 'json'
-        //     }
-        // })
-        // .then((data)=>{
-        //     return data.json()
-        // })
-        // .then((res)=>{
-        //     resolve(res.data)
-        // })
-        // .catch(e=>{
-        //     console.error(e)
-        // })
+
+        axios({
+            method: 'get',
+            url: url,
+            data: baseargs,
+            withCredentials: true
+        })
+        .then((res)=>{
+            resolve(res.data)
+        })
+        .catch(e=>{
+            console.error(e)
+        })
+      
     })
     
   
@@ -45,20 +40,13 @@ function _mergePostData(data) {
 
 function _post(url,baseargs){
     return new Promise((resolve,reject)=>{
-        fetch(url,{
-            credentials:'include',
-            method:'POST',
-            //body:_mergePostData(baseargs),
-            body:JSON.stringify(baseargs),        
-            headers: {
-                'Content-Type': 'json'
-            }
-        })
-        .then((data)=>{
-            return data.json()
+        axios({
+            method: 'post',
+            url: url,
+            data: baseargs,
+            withCredentials: true
         })
         .then((res)=>{
-            
             resolve(res.data)
         })
         .catch(e=>{
@@ -75,7 +63,7 @@ function _fetchJonp(url,baseargs){
             return data.json()
         })
         .then((res)=>{
-            resolve(res.data)
+            resolve(res.respD)
         })
         .catch(e=>{
             console.error(e)

@@ -38,7 +38,8 @@ export const subjectList = [
             name: "公司A",
             id: "001"
         }
-    }
+    },
+
 ]
 
 
