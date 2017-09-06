@@ -119,7 +119,11 @@ export default {
         }
     },
     mounted() {
-        this.$store.dispatch("fetchSubject",{subjectID:this.subjectID || ''});   
+        console.log(this.subjectID);
+        this.subjectID && this.$store.dispatch('fetchSubject',{subjectID:this.subjectID});
+
+
+
         this.$nextTick(()=>{
             this.initCode()
         }); 
