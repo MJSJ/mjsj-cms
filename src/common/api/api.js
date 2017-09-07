@@ -8,8 +8,8 @@ const GET_URLS = {
     fetchSubjectList:HOST+"/cms/fetchSubjectList",
     fetchSubject:HOST+"/cms/fetchSubject",
     getShopBoard:HOST+"/joy/merchant/getshopboard",
-    fetchUserList:HOST+"/cmc/fetchUserList",
-    fetchTotalTopics:HOST+"/cms/fetchTotalTopics"
+    fetchUserList:HOST+"/cms/fetchUserList",
+    fetchTotalTopics:HOST+"/cms/fetchSubjectList"
 }
 const POST_URLS = {
     // newUploadImage:HOST+"/joy/merchant/newuploadimage",
@@ -18,7 +18,10 @@ const POST_URLS = {
 
     deleteSubject:HOST+"/cms/deleteSubject",
 
-    updateSubject:HOST+"/cms/updateSubject"
+    updateSubject:HOST+"/cms/updateSubject",
+
+    updateCompany: HOST + "/cms/updateCompany",
+    deleteUser: HOST + "/cms/deleteUser",
 }
 
 const JSONP_URLS = {
@@ -34,8 +37,8 @@ const LOCAL_URLS = {
     fetchSubjectList: db.subjectList,
     deleteSubject: db.result,
     fetchSubject: db.subject,
-    fetchUserList: db.userList,
-    fetchTotalTopics: db.totalTopics
+    // fetchUserList: db.userList,
+    // fetchTotalTopics: db.totalTopics
 }
 
 const api = {

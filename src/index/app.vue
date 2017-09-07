@@ -59,8 +59,8 @@ export default {
 
             //触发一个action
             this.$store.dispatch('fetchSubjectList');
-//            this.$store.dispatch('fetchUserList');
-//            this.$store.dispatch('fetchTotalTopics');
+            this.$store.dispatch('fetchUserList');
+            this.$store.dispatch('fetchTotalTopics', {status: 1});
         })
 
     },
