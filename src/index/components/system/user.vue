@@ -162,13 +162,7 @@
                         return;
                     }
                     this.isShowWarning = false;
-//                    this.userList.push(currentForm);
                 }
-                /*else {
-
-               //                    this.$set(this.userList, indexWhichClicked, currentForm);
-               //                    this.userList.splice(indexWhichClicked, 1, currentForm);
-                               }*/
                 this.$store.dispatch("updateCompany", createNewUser(currentForm));
                 this.dismissDialog();
             },
@@ -191,7 +185,8 @@
     function createNewUser(currentForm) {
         let subjectIdList = [];
         currentForm.subjectList.forEach((item) => {
-            subjectIdList.push(item.id);
+            if (item.isChecked)
+                subjectIdList.push(item.id);
         });
         currentForm.subjectList = subjectIdList;
         return currentForm;

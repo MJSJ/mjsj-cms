@@ -66,9 +66,9 @@ export const updateCompany = (context, args) => {
         if (data.success) {
             context.dispatch("fetchUserList");
             context.dispatch('fetchTotalTopics', {status: 1});
-            window.vm.$message("添加成功");
+            window.vm.$message("编辑成功");
         } else {
-            window.vm.$message.error('添加失败');
+            window.vm.$message.error('编辑失败');
         }
         context.commit("fetchUserList", data.data)
     })
