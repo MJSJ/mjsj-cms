@@ -46,7 +46,7 @@
                     <el-checkbox v-for="(item,index) in form.subjectList"
                                  :label="item"
                                  :checked="item.isChecked"
-                                 @change="handleCheckedTopicsChange(index)">{{item.name}}--{{index}}
+                                 @change="handleCheckedTopicsChange(index)">{{item.name}}
                     </el-checkbox>
                 </el-form-item>
             </el-form>
