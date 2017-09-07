@@ -30,15 +30,12 @@
             </el-table>
         </div>
 
-        <el-dialog title="编辑"
+        <el-dialog :title="isAddUser ? '添加':'编辑'"
                    v-if="dialogFormVisible"
                    :visible.sync="true"
                    size="tiny"
                    :show-close=false>
             <el-form :model="form">
-                <el-form-item label="用户名" :label-width="formLabelWidth">
-                    <el-input v-model="form.id" auto-complete="off" class="edit_input">></el-input>
-                </el-form-item>
                 <el-form-item label="公司名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" auto-complete="off" class="edit_input">> </el-input>
                 </el-form-item>
@@ -81,7 +78,6 @@
     }
 
     let currentForm = {};
-    let isAddUser = false;
     let indexWhichClicked = 0;
 
     export default {
@@ -93,6 +89,7 @@
                 formLabelWidth: '60px',
                 warningHint: "",
                 isShowWarning: false,
+                isAddUser: false,
             }
         },
         computed: mapState({
@@ -101,18 +98,24 @@
         }),
         mounted() {
             //getCheckedList
-            this.userList.forEach((item) => {
-                //这个copyArr传的空也要报错
-                item.subjectList.forEach((topic) => {
-                    topic.isChecked = true;
-                });
-                difference(item.subjectList, this.totalTopics);
-            });
-            this.form = this.userList[0];
-            console.log(this.userList);
-            console.log("=============================");
+            this.refreshData();
+        },
+        watch: {
+            userList: function () {
+                this.refreshData();
+            }
         },
         methods: {
+            refreshData() {
+                this.userList.forEach((item) => {
+                    //这个copyArr传的空也要报错
+                    item.subjectList.forEach((topic) => {
+                        topic.isChecked = true;
+                    });
+                    difference(item.subjectList, this.totalTopics);
+                });
+                this.form = this.userList[0];
+            },
             handleEdit: function (index, row) {
                 this.showDialog();
                 indexWhichClicked = index;
@@ -122,8 +125,8 @@
             handleDelete(index, row) {
                 this.$confirm('确认删除？')
                     .then(_ => {
-                        this.userList.splice(index, 1);
-//                        this.$store.dispatch("deleteSubject", { subjectID: row.id });
+                        this.$store.dispatch("deleteUser", {userID: this.userList[index].id});
+//                        this.userList.splice(index, 1);
                     })
                     .catch(_ => {
                     });
@@ -131,7 +134,7 @@
             handleAdd() {
                 this.showDialog();
                 this.changeEditForm(new Form("", "", "", "", this.totalTopics));
-                isAddUser = true;
+                this.isAddUser = true;
             },
             handleCheckedTopicsChange(index) {
                 this.form.subjectList[index].isChecked = !this.form.subjectList[index].isChecked;
@@ -152,18 +155,21 @@
             },
 
             handleEditConfirm() {
-                if (isAddUser) {
-                    if (currentForm.id === "" || currentForm.name === "" || currentForm.password === "") {
+                if (this.isAddUser) {
+                    if (currentForm.name === "" || currentForm.password === "") {
                         this.warningHint = "输入框不能为空";
                         this.isShowWarning = true;
                         return;
                     }
                     this.isShowWarning = false;
-                    this.userList.push(currentForm);
-                } else {
-                    this.$set(this.userList, indexWhichClicked, currentForm);
-//                    this.userList.splice(indexWhichClicked, 1, currentForm);
+//                    this.userList.push(currentForm);
                 }
+                /*else {
+
+               //                    this.$set(this.userList, indexWhichClicked, currentForm);
+               //                    this.userList.splice(indexWhichClicked, 1, currentForm);
+                               }*/
+                this.$store.dispatch("updateCompany", createNewUser(currentForm));
                 this.dismissDialog();
             },
 
@@ -173,13 +179,22 @@
 
             dismissDialog() {
                 this.dialogFormVisible = false;
-                isAddUser = false;
+                this.isAddUser = false;
             },
             showDialog() {
                 this.dialogFormVisible = true;
                 this.isShowWarning = false;
             }
         }
+    }
+
+    function createNewUser(currentForm) {
+        let subjectIdList = [];
+        currentForm.subjectList.forEach((item) => {
+            subjectIdList.push(item.id);
+        });
+        currentForm.subjectList = subjectIdList;
+        return currentForm;
     }
 
     function difference(subjectList, totalTopics) {

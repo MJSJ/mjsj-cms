@@ -1,6 +1,6 @@
 <template>
     <div class="subject_list">
-        <el-button size="small" type="success" @click="handleAdd()">新增</el-button>
+        <el-button size="small" type="success" @click="showDetail()">新增</el-button>
         <el-table border :data="subjectList" style="width: 100%">  
             <el-table-column prop="id" label="ID" width="120">
             </el-table-column>
@@ -17,95 +17,54 @@
     
             <el-table-column label="上次编辑" width="300">
                 <template scope="scope">
-                    <div slot="reference">
+                    <div slot="reference" v-if="scope.row.lastEdit">
                         {{scope.row.lastEdit.userName}}--{{scope.row.lastEdit.time}}
                     </div>
                 </template>
             </el-table-column>
     
         </el-table>
-        <el-dialog  title="专题详情页" :visible.sync="dialogFormVisible" size="large">
-            <div class="tag_area">
-                <div class="tag_cell">
-                <el-tag type="primary">版本标识</el-tag>
-                <el-input  v-model="versionValue" :placeholder="currentData.data.tag"  :disabled="inputDisabled1"></el-input>
-                <el-button type="info" @click="editVersion">编辑</el-button>
-            </div>
-            <div class="tag_cell">
-                <el-tag type="primary">拥有者</el-tag>
-                <el-input v-model="ownerValue" type="success" :placeholder="currentData.owner" :disabled="inputDisabled2"></el-input>
-            </div>
-            </div>
-            <div class="version_area">
-                <div class="text_area" >
-                    <div v-if="currentData!=null">{{currentData.data.content}}</div>                  
-                </div>
-                <div class="select_area" v-if="selectVisibal">
-                    <el-form>
-                        <el-form-item label="历史版本" :label-width="formLabelWidth">
-                            <el-select v-model="valueOption" placeholder="请选择历史版本" @change="switchVersion(valueOption)">
-                                <el-option  v-for="(item,index) in subject.history"  :key="item.id" :label="item.tag" :value="item.tag"></el-option>
-                            </el-select>
-                        </el-form-item> 
-                    </el-form>
-                </div>
-            </div>
-            
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="handleNewAndSave">{{wordSwitch}}</el-button>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
 
-
+        <subjectDetail v-if="detailVisble" @visibleListener="visibleListener" :subjectID="subjectID"></subjectDetail>
     </div>
 </template>
 
 <script>
 import { SUBJECT_ITEM } from "../../../common/api/url.js"
-import {mapState} from 'vuex' 
-import subjectDialog from "./components/subjectDialog.vue"
+import {mapState,mapMutations} from 'vuex' 
+import subjectDetail from "./components/subjectDetail.vue"
 export default {
     data() {
-        return {      
-                dialogFormVisible: false, 
-                inputDisabled1:true,
-                inputDisabled2:true,
-                selectVisibal:true,
-                wordSwitch:'编辑', 
-                versionValue:'',                  //版本号
-                ownerValue:'' ,                   //公司
-                title:'专题详情页',
-                valueOption:'',                  //这里也必须先定义，当前option的value
-                currentData:{
-                    owner:'',
-                    data:[]
-                },                  //当前数据
-                formLabelWidth: '120px',
-                
+        return {    
+            detailVisble:false,
+            subjectID:0//选中的subject，0为初始状态
+        }
+    },
+
+    watch:{
+        dialogFormVisible(v){
+            if(!v)
+                return
+            this.$nextTick(()=>{
+                this.initCode()
+            })
+            
         }
     },
     components:{
-        'subjectDialog':subjectDialog
+        'subjectDetail':subjectDetail
     },
     methods: {
-        deleteSubject(){
-            // this.$store.dispatch("deleteSubject",{id:})
-        },
+        ...mapMutations(['setSelectedSubject']),
 
         //下面的代码是之前跳转的页面的逻辑，
         //现在都在本页内了，所以以下代码需要更改
         handleEdit(index, row) {
-          
-            this.dialogFormVisible = true;
-            this.currentData.data = this.subject.history[0];
-            this.currentData.owner = this.subject.owner.name;
-            this.selectVisibal = true;
-            this.inputDisabled1 = true;
-            this.inputDisabled2 = true;
-            this.wordSwitch = "编辑"
-         
-           
+            this.detailVisble = true;
+            this.subjectID = row.id;
+            console.log(index);
+            console.log(row)
+            console.log(this.subjectID)
         },
         handleDelete(index, row) {
             this.$confirm('确认删除？')
@@ -115,47 +74,28 @@ export default {
                 })
                 .catch(_ => { });
         },
-        editVersion(){
-            this.inputDisabled1 = false;
-            console.log(1)
-            console.log(this.subject,1)
+        showDetail(){
+            this.subjectID = 0;
+            this.$nextTick(() =>{
+                 this.detailVisble = true;
+            })
+           
+           
         },
-        switchVersion(v){
-            console.log(v);  //这里能拿到当前option的value值，但是index拿不到，只有去json里面遍历
-            var length = this.subject.history.length;
-            for(var i=0;i<length;i++){
-                if(v == this.subject.history[i].tag){
-                    this.currentData.data = this.subject.history[i];
-                }
-            }
-            console.log(this.currentData)
-            
-        },
-        handleNewAndSave(){
-            //this.dialogFormVisible = false;
-            this.wordSwitch = "保存";
-        },
-        //新增清空当前显示的数据，隐藏版本记录栏
-        handleAdd(){
-            this.currentData.data = [];
-            this.dialogFormVisible = true;
-            this.inputDisabled1 = false;
-            this.inputDisabled2 = false;
-            this.selectVisibal = false;
-            this.versionValue = '',                 
-            this.ownerValue = '' ,  
-            this.wordSwitch = "保存"
-               
+        visibleListener(value){
+            this.detailVisble = value
         }
     },
     mounted() {
-        this.$store.dispatch("fetchSubject");
+        // this.$store.dispatch("fetchSubject");
+        //监听子组件的visible
+        //console.log(this.subjectList)
     },
     
     //通过mapState方法，
     //直接从根store里取
     computed: mapState({ 
-        subjectList: 'subjectList',
+        subjectList:'subjectList',
         subject:'subject'
     })  
 
@@ -200,7 +140,7 @@ export default {
             min-height: 400px;
             .text_area{
                 flex: 2;
-                background: #ccc;
+                // background: #ccc;
             }
             .select_area{
                 flex: 1

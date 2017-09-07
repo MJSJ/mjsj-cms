@@ -16,7 +16,15 @@ export default function generateStore(baseargs){
             currentView: '',
             tabs: tabs,
             historyTabs: [],
-            subject:null
+            subject:null,
+            selectedSubject:{},
+            loginUser:{
+                role:1
+            },
+            userList:{
+                
+            },
+            addSubject:null
         },
         mutations,
         actions,

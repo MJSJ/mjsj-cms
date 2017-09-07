@@ -18,6 +18,10 @@ export const fetchSubject = (state, payload) => {
     state.subject = payload;
 }
 
+export const updateSubject = (state, payload) => {
+    state.addSubject = payload;
+}
+
 export const setCurrentView = (state, view) => {
     state.currentView = view;
     let v = state.tabs.find(item => item.id === view);
@@ -26,6 +30,10 @@ export const setCurrentView = (state, view) => {
         state.historyTabs.push(v);
     }
 };
+
+export const setSelectedSubject = (state,paylod) =>{
+    state.selectedSubject = payload
+}
 
 export const removeCurrentView = (state, view) => {
     let ind = state.historyTabs.findIndex(item => item.id === view);

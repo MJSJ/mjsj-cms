@@ -14,6 +14,7 @@
     "vue"
   ],
   "dependencies": {
+    "axios": "^0.16.2",
     "element-ui": "^1.4.1",
     "es6-promise": "^4.1.0",
     "fetch-jsonp": "^1.1.1",
