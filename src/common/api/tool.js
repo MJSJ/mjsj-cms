@@ -7,8 +7,7 @@ function _get(url,baseargs){
 
         axios({
             method: 'get',
-            url: url,
-            data: baseargs,
+            url: url+(baseargs?('?'+qs.stringify(baseargs)):''),
             withCredentials: true
         })
         .then((res)=>{
