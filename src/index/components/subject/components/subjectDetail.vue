@@ -3,7 +3,7 @@
         <div class="tag_area">
             <div class="tag_cell">
                 <el-tag type="primary">专题名字</el-tag>
-                <el-input  v-model="nameValue"   :disabled="inputaDisabled"></el-input>
+                <el-input  v-model="nameValue" value="gg"  :disabled="inputaDisabled">{{currentData}}</el-input>
             </div>
             <div class="tag_cell">
                 <el-tag type="primary">版本标识</el-tag>
@@ -56,6 +56,8 @@ export default {
             readOnly:false,
             showCursorWhenSelecting:false,
             bmg_e5Class:'bmg_e5',
+            nameValue:'',
+            versionValue:''
         }
     },
     props:{
@@ -80,10 +82,10 @@ export default {
                 this.inputaDisabled = false;
                 console.log(this.readOnly)
                 return false;
-            }
-            if(this.wordSwitch == "保存"){
+            }else if(this.wordSwitch == "保存"){
                 if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
-                    this.$store.dispatch("updateSubject",{subjectName:this.nameValue,content:content,tag:this.versionValue});
+                    this.$store.dispatch("updateSubject",{content:content,tag:this.versionValue,subjectID:this.subjectID});
+                    this.$nextTick(this.$emit('visibleListener', false));
                     return false;
                 }else{
                     this.$confirm("请确认录入信息完整！")
@@ -146,34 +148,14 @@ export default {
             }
         },
         historyVisible(){
-            if(this.subjectID == 0){  
-               this.inputaDisabled = false;
-               return false
+            if(this.subject&&this.subject.history){
+               this.inputaDisabled = true;
+               this.wordSwitch = "编辑";
+               return true
             }else{
-                this.wordSwitch = "编辑";
-                this.inputaDisabled = true;
-                return  true;
+                return  false;
             }
         },
-        readOnly(){
-            if(this.subjectID == 0){
-                return false;
-            }else{
-                return true;
-            }
-        },
-        versionValue(){
-            if(this.subjectID!=0){
-                return this.subject&&this.subject.history&&this.subject.history[this.index].tag
-            }
-        },
-        nameValue(){
-            if(this.subjectID!=0){
-                console.log(this.editor)
-                return this.subject&&this.subject.name
-            }
-        }
-
     },
     watch:{
         
