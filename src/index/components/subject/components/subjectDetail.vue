@@ -14,7 +14,7 @@
             <div class="tag_cell">
                 <el-tag type="danger">拥有者</el-tag>
                 <el-tag type="danger">{{currentData && currentData.owner}}</el-tag>
-                <el-input v-if="false" v-model="ownerValue" type="success" :placeholder="currentData && currentData.owner" :disabled="loginUser.role==1"></el-input>
+                <el-input v-if="false" v-model="ownerValue" type="success"  :disabled="loginUser.role==1"></el-input>
             </div>
         </div>
         <div class="version_area">
@@ -23,7 +23,7 @@
             </div>
             <div class="select_area" v-if="historyVisible">
                         <ul class="versionNameUl">
-                            <li class="versionNameLi">历史版本</li>
+                            <li class="versionNameLi versionNameLi_title">历史版本</li>
                             <li @click="switchVersion($index)" class="versionNameLi"  v-for="(item,$index) in subject.history"  :key="item.id" :class="$index == index ? bmg_e5Class : ''">{{item.tag}}</li>
                         </ul>
                         <div class="msg_cell"><el-tag type="primary">操作人</el-tag>：<el-tag type="primary">{{currentData && currentData.data.userName}}</el-tag></div>
@@ -70,20 +70,18 @@ export default {
         switchVersion(index){
             this.index = index;
             this.temporaryVersion = this.editor.getValue();
-            console.log(this.temporaryVersion)
+            //console.log(this.temporaryVersion)
             let content = this.subject.history[index].content;
             this.editor.setValue(content);
         },
         handleNewAndSave(){
            // this.wordSwitch = "保存";
-            console.log(this.subjectID);
-            console.log(this.editor.getValue());
+           // console.log(this.subjectID);
+           // console.log(this.editor.getValue());
             var content = this.editor.getValue();
             if(this.wordSwitch == "编辑"){
                 this.wordSwitch = "保存";
-                this.readOnly = false;
                 this.inputaDisabled = true;
-                console.log(this.readOnly)
                 return false;
             }else if(this.wordSwitch == "保存"){
                 if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
@@ -97,7 +95,7 @@ export default {
                 }else{
                     this.$confirm("请确认录入完整信息！")
                     .then(_=>{
-                        console.log("确定")
+                        //console.log("确定")
                     })
                     .catch(_ =>{console.log("取消")})
                 }
@@ -123,16 +121,25 @@ export default {
         },
         switchToTemporary(){
             this.editor.setValue(this.temporaryVersion)
-            console.log(this.temporaryVersion);
-            console.log(this.editor)
+            //console.log(this.temporaryVersion);
+           /// console.log(this.editor)
         }
     },
     mounted() {
+        var self = this;
         console.log(this.subjectID);
-        this.subjectID && this.$store.dispatch('fetchSubject',{subjectID:this.subjectID});
-        this.$nextTick(()=>{
-            this.initCode()
-        }); 
+        this.subjectID!=0 && this.$store.dispatch('fetchSubject',{subjectID:this.subjectID});
+
+        let timer = setInterval(() =>{
+            if(self.currentData && self.currentData.data){
+                clearInterval(timer);
+                self.initCode();
+            }else if( self.subjectID == 0){
+                clearInterval(timer);
+                self.initCode();
+            }
+        })
+
     },
     //通过mapState方法，
     //直接从根store里取
@@ -143,7 +150,8 @@ export default {
             loginUser:'loginUser'
         }),
         currentData(){
-            if(this.subjectID!=0){
+            if(this.subjectID!=0 && this.subject && this.subject.history){            //第一次执行拿不到数据，第二次才拿到数据，所哟要过滤到第一次
+                console.log(this.subject.history)
                  return{
                     owner:this.subject&&this.subject.owner&&this.subject.owner.name || '',
                     name:this.subject&&this.subject.name|| '',
@@ -162,7 +170,6 @@ export default {
         },
     },
     watch:{
-        
     } 
 }
 </script>
@@ -214,8 +221,6 @@ export default {
                 margin-left: 50px;
                 max-width: 300px;
                 .versionNameUl{
-                    border: 1px solid #ccc;
-                    border-radius: 10px;
                     .versionNameLi{
                         background-color:#f3f3f3;
                         border-radius: 10px;
@@ -225,16 +230,27 @@ export default {
                         line-height: 40px;
                         text-align: center;
                         transition: .5s all ease;
+                        margin-bottom:10px;
+                    }
+                    .versionNameLi_title{
+                        background-color: #1d90e6;
+                        color: #fff;
                     }
                     .bmg_e5{
-                        background-color: #e5e5e5;
+                        background-color: #4caf50;
+                        color: #fff;
                     }
                 }
                 .msg_cell{
-                    margin: 10px 0 10px 0;
+                    margin: 20px 0 10px 0;
+                    .el-tag{
+                        min-width: 50px;
+                        text-align: center;
+                    }
                 }
                 .temporary_version{
                     text-align: center;
+                    margin-top: 40px;
                 }
 
             }
