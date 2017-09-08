@@ -3,15 +3,18 @@
         <div class="tag_area">
             <div class="tag_cell">
                 <el-tag type="primary">专题名字</el-tag>
-                <el-input  v-model="nameValue" value="gg"  :disabled="inputaDisabled">{{currentData}}</el-input>
+                <el-tag v-if="!inputaDisabled" type="primary">{{currentData && currentData.name}}</el-tag>
+                <el-input v-if="inputaDisabled"  v-model="nameValue"  :disabled="false"></el-input>
             </div>
             <div class="tag_cell">
-                <el-tag type="primary">版本标识</el-tag>
-                <el-input  v-model="versionValue"  :disabled="inputaDisabled"></el-input>
+                <el-tag type="success">版本标识</el-tag>
+                <el-tag v-if="!inputaDisabled" type="success">{{currentData && currentData.data && currentData.data.tag}}</el-tag>
+                <el-input v-if="inputaDisabled"  v-model="versionValue"  :disabled="false"></el-input>
             </div>
             <div class="tag_cell">
-                <el-tag type="primary">拥有者</el-tag>
-                <el-input v-model="ownerValue" type="success" :placeholder="currentData&&currentData.owner" :disabled="loginUser.role==1"></el-input>
+                <el-tag type="danger">拥有者</el-tag>
+                <el-tag type="danger">{{currentData && currentData.owner}}</el-tag>
+                <el-input v-if="false" v-model="ownerValue" type="success" :placeholder="currentData && currentData.owner" :disabled="loginUser.role==1"></el-input>
             </div>
         </div>
         <div class="version_area">
@@ -23,8 +26,8 @@
                             <li class="versionNameLi">历史版本</li>
                             <li @click="switchVersion($index)" class="versionNameLi"  v-for="(item,$index) in subject.history"  :key="item.id" :class="$index == index ? bmg_e5Class : ''">{{item.tag}}</li>
                         </ul>
-                        <div class="msg_cell"><el-tag type="primary">操作人</el-tag>：<el-tag type="primary">{{currentData.data.userName}}</el-tag></div>
-                        <div class="msg_cell"><el-tag type="primary">时间</el-tag>：<el-tag type="primary">{{currentData.data.time}}</el-tag></div>
+                        <div class="msg_cell"><el-tag type="primary">操作人</el-tag>：<el-tag type="primary">{{currentData && currentData.data.userName}}</el-tag></div>
+                        <div class="msg_cell"><el-tag type="primary">时间</el-tag>：<el-tag type="primary">{{currentData && currentData.data.time}}</el-tag></div>
                         <div class="temporary_version"><el-button type="info" @click="switchToTemporary">临时版本</el-button></div>
 
             </div>
@@ -65,11 +68,11 @@ export default {
     },
     methods: {
         switchVersion(index){
+            this.index = index;
             this.temporaryVersion = this.editor.getValue();
             console.log(this.temporaryVersion)
             let content = this.subject.history[index].content;
             this.editor.setValue(content);
-            this.index = index;
         },
         handleNewAndSave(){
            // this.wordSwitch = "保存";
@@ -79,16 +82,20 @@ export default {
             if(this.wordSwitch == "编辑"){
                 this.wordSwitch = "保存";
                 this.readOnly = false;
-                this.inputaDisabled = false;
+                this.inputaDisabled = true;
                 console.log(this.readOnly)
                 return false;
             }else if(this.wordSwitch == "保存"){
                 if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
-                    this.$store.dispatch("updateSubject",{content:content,tag:this.versionValue,subjectID:this.subjectID});
+                    if(this.subjectID == 0){
+                        this.$store.dispatch("updateSubject",{content:content,subjectName:this.nameValue,tag:this.versionValue});
+                    }else{
+                        this.$store.dispatch("updateSubject",{content:content,tag:this.versionValue,subjectID:this.subjectID});
+                    }
                     this.$nextTick(this.$emit('visibleListener', false));
                     return false;
                 }else{
-                    this.$confirm("请确认录入信息完整！")
+                    this.$confirm("请确认录入完整信息！")
                     .then(_=>{
                         console.log("确定")
                     })
@@ -123,9 +130,6 @@ export default {
     mounted() {
         console.log(this.subjectID);
         this.subjectID && this.$store.dispatch('fetchSubject',{subjectID:this.subjectID});
-
-
-
         this.$nextTick(()=>{
             this.initCode()
         }); 
@@ -148,11 +152,11 @@ export default {
             }
         },
         historyVisible(){
-            if(this.subject&&this.subject.history){
-               this.inputaDisabled = true;
+            if(this.subjectID!=0){
                this.wordSwitch = "编辑";
                return true
             }else{
+                this.inputaDisabled = true;
                 return  false;
             }
         },
@@ -188,6 +192,8 @@ export default {
                     height: 36px;
                     line-height: 36px;
                     margin-right: 10px;
+                    min-width:60px;
+                    text-align: center;
                 }
                 .el-input{
                     width: 120px;
@@ -206,6 +212,7 @@ export default {
             .select_area{
                 flex: 1;
                 margin-left: 50px;
+                max-width: 300px;
                 .versionNameUl{
                     border: 1px solid #ccc;
                     border-radius: 10px;
