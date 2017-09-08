@@ -3,18 +3,15 @@
         <div class="tag_area">
             <div class="tag_cell">
                 <el-tag type="primary">专题名字</el-tag>
-                <el-tag v-if="!inputaDisabled" type="primary">{{currentData && currentData.name}}</el-tag>
-                <el-input v-if="inputaDisabled"  v-model="nameValue"  :disabled="false"></el-input>
+                <el-input   v-model="currentData.name"  :disabled="inputaDisabled"></el-input>
             </div>
             <div class="tag_cell">
                 <el-tag type="success">版本标识</el-tag>
-                <el-tag v-if="!inputaDisabled" type="success">{{currentData && currentData.data && currentData.data.tag}}</el-tag>
-                <el-input v-if="inputaDisabled"  v-model="versionValue"  :disabled="false"></el-input>
+                <el-input   v-model="currentData.data.tag"  :disabled="inputaDisabled"></el-input>
             </div>
             <div class="tag_cell">
                 <el-tag type="danger">拥有者</el-tag>
-                <el-tag type="danger">{{currentData && currentData.owner}}</el-tag>
-                <el-input v-if="false" v-model="ownerValue" type="success"  :disabled="loginUser.role==1"></el-input>
+                <el-input  v-model="currentData.owner" type="success"  :disabled="loginUser.role==1"></el-input>
             </div>
         </div>
         <div class="version_area">
@@ -59,8 +56,6 @@ export default {
             readOnly:false,
             showCursorWhenSelecting:false,
             bmg_e5Class:'bmg_e5',
-            nameValue:'',
-            versionValue:''
         }
     },
     props:{
@@ -81,7 +76,7 @@ export default {
             var content = this.editor.getValue();
             if(this.wordSwitch == "编辑"){
                 this.wordSwitch = "保存";
-                this.inputaDisabled = true;
+                this.inputaDisabled = false;
                 return false;
             }else if(this.wordSwitch == "保存"){
                 if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
@@ -134,12 +129,11 @@ export default {
             if(self.currentData && self.currentData.data){
                 clearInterval(timer);
                 self.initCode();
-            }else if( self.subjectID == 0){
+            }else if(self.subjectID == 0){
                 clearInterval(timer);
                 self.initCode();
             }
         })
-
     },
     //通过mapState方法，
     //直接从根store里取
@@ -150,21 +144,27 @@ export default {
             loginUser:'loginUser'
         }),
         currentData(){
-            if(this.subjectID!=0 && this.subject && this.subject.history){            //第一次执行拿不到数据，第二次才拿到数据，所哟要过滤到第一次
+            if(this.subjectID != 0 && this.subject && this.subject.history){            //第一次执行拿不到数据，第二次才拿到数据，所哟要过滤到第一次
                 console.log(this.subject.history)
                  return{
                     owner:this.subject&&this.subject.owner&&this.subject.owner.name || '',
                     name:this.subject&&this.subject.name|| '',
                     data:this.subject&&this.subject.history&&this.subject.history[this.index] || []
                 }
+            }else if(this.subjectID == 0){
+                return {
+                    owner:'',
+                    name:'',
+                    data:[]
+                }
             }
         },
         historyVisible(){
             if(this.subjectID!=0){
                this.wordSwitch = "编辑";
+                this.inputaDisabled = true;
                return true
             }else{
-                this.inputaDisabled = true;
                 return  false;
             }
         },
