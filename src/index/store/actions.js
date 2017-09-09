@@ -52,7 +52,7 @@ export const fetchUserList = (context, args) => {
     api.fetchUserList(args).then((data) => {
         context.commit("fetchUserList", data)
     })
-}
+};
 
 export const fetchTotalTopics = (context, args) => {
     api.fetchTotalTopics(args).then((data) => {

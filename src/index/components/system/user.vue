@@ -95,6 +95,7 @@
         computed: mapState({
             userList: 'userList',
             totalTopics: 'totalTopics',
+
         }),
         mounted() {
             //getCheckedList
@@ -103,7 +104,12 @@
         watch: {
             userList: function () {
                 this.refreshData();
-            }
+            },
+//            totalTopics:function () {
+//                console.log("总专题列表");
+//                console.log(this.totalTopics);
+//                this.refreshData();
+//            }
         },
         methods: {
             refreshData() {
@@ -114,9 +120,11 @@
                     });
                     difference(item.subjectList, this.totalTopics);
                 });
+                console.log("刷新数据");
+                console.log(this.userList);
                 this.form = this.userList[0];
             },
-            handleEdit: function (index, row) {
+            handleEdit(index, row) {
                 this.showDialog();
                 indexWhichClicked = index;
                 this.changeEditForm(this.userList[index]);
