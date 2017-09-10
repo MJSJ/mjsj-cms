@@ -3,15 +3,15 @@
         <div class="tag_area">
             <div class="tag_cell">
                 <el-tag type="primary">专题名字</el-tag>
-                <el-input   v-model="currentData.name"  :disabled="inputaDisabled"></el-input>
+                <el-input   v-model="nameValue"  :disabled="inputaDisabledName"></el-input>
             </div>
             <div class="tag_cell">
                 <el-tag type="success">版本标识</el-tag>
-                <el-input   v-model="currentData.data.tag"  :disabled="inputaDisabled"></el-input>
+                <el-input   v-model="versionValue"  :disabled="inputaDisabled"></el-input>
             </div>
             <div class="tag_cell">
                 <el-tag type="danger">拥有者</el-tag>
-                <el-input  v-model="currentData.owner" type="success"  :disabled="loginUser.role==1"></el-input>
+                <el-input  v-model="ownerValue" type="success"  :disabled="loginUser.role==1"></el-input>
             </div>
         </div>
         <div class="version_area">
@@ -24,8 +24,11 @@
                             <li @click="switchVersion($index)" class="versionNameLi"  v-for="(item,$index) in subject.history"  :key="item.id" :class="$index == index ? bmg_e5Class : ''">{{item.tag}}</li>
                         </ul>
                         <div class="msg_cell"><el-tag type="primary">操作人</el-tag>：<el-tag type="primary">{{currentData && currentData.data.userName}}</el-tag></div>
-                        <div class="msg_cell"><el-tag type="primary">时间</el-tag>：<el-tag type="primary">{{currentData && currentData.data.time}}</el-tag></div>
-                        <div class="temporary_version"><el-button type="info" @click="switchToTemporary">临时版本</el-button></div>
+                        <div class="msg_cell"><el-tag type="primary">时间</el-tag>：<el-tag type="primary">{{currentData && handleDataFormat(currentData.data.time)}}</el-tag></div>
+                        <div class="temporary_version">
+                                <el-button :disabled="TemporaryDisabled" type="info" @click="switchToTemporary">临时版本({{TemporaryVersion}})</el-button>
+                        </div>
+                        <p class="tooltip">注:临时版本用去在编辑状态下，切换到其他版本代码之前，会自动保存当前正在编辑的代码块，点击回到编辑未保存的版本。</p>
 
             </div>
             <!-- <historyVersion :historyData="historyData"><historyVersion/>   -->
@@ -46,16 +49,26 @@ export default {
         //'historyVersion':historyVersion
     },
     data() {
-        return {               
+        return {
             dialogFormVisible: false, 
             inputaDisabled:false,
+            inputaDisabledName:false,
             wordSwitch:'保存',
-            ownerValue:'' ,                   //公司
             title:'专题详情页',
             index:0,
-            readOnly:false,
+            TemporaryIndex:0,
             showCursorWhenSelecting:false,
             bmg_e5Class:'bmg_e5',
+            nameValue:'',
+            versionValue:'',
+            ownerValue:'',
+            TemporaryDisabled:true,    //临时版本按钮 ，只要在切换版本之后才能点击
+            TemporaryVersion:''
+
+
+
+
+
         }
     },
     props:{
@@ -63,11 +76,21 @@ export default {
     },
     methods: {
         switchVersion(index){
-            this.index = index;
-            this.temporaryVersion = this.editor.getValue();
-            //console.log(this.temporaryVersion)
-            let content = this.subject.history[index].content;
-            this.editor.setValue(content);
+            if(this.index!=index){
+                this.TemporaryIndex = this.index;        //获取点击前的index
+                this.TemporaryVersion = this.currentData.data.tag;   //保存上一次的版本号，这里不同于时间，可以通过直接修改nidex，改变curentData来改变，这里单独拿的变量，最好优化
+                this.TemporaryContent = this.editor.getValue();
+                let content = this.subject.history[index].content;    //切换content
+                this.editor.setValue(content);
+                this.index = index;    //切换index
+                this.versionValue = this.currentData.data.tag;   //切换版本号
+                if( this.wordSwitch == "保存"){                   //这里过滤调未点击编辑时，切换不会影响 临时版本按钮状态
+                    this.TemporaryDisabled = false;
+                }
+            }else{
+                window.vm.$message("已是当前版本！");
+                return false
+            }
         },
         handleNewAndSave(){
            // this.wordSwitch = "保存";
@@ -77,20 +100,23 @@ export default {
             if(this.wordSwitch == "编辑"){
                 this.wordSwitch = "保存";
                 this.inputaDisabled = false;
+                this.inputaDisabledName = true;
+                this.editor.options.readOnly = false;           //重新配置editor,因为editor只生产了一次，所以再配置项里面加readOnly:this.readOnly 来操作编辑器 无效
                 return false;
             }else if(this.wordSwitch == "保存"){
-                if(this.content!='' && this.nameValue!='' && this.versionValue!=''){
+                if(content!='' &&  this.nameValue!='' && this.versionValue!=''){
                     if(this.subjectID == 0){
                         this.$store.dispatch("updateSubject",{content:content,subjectName:this.nameValue,tag:this.versionValue});
                     }else{
                         this.$store.dispatch("updateSubject",{content:content,tag:this.versionValue,subjectID:this.subjectID});
                     }
                     this.$nextTick(this.$emit('visibleListener', false));
+                    this.index = 0;        //更新到最新版本
                     return false;
                 }else{
                     this.$confirm("请确认录入完整信息！")
                     .then(_=>{
-                        //console.log("确定")
+                        console.log("确定")
                     })
                     .catch(_ =>{console.log("取消")})
                 }
@@ -98,6 +124,9 @@ export default {
         },
         //新增清空当前显示的数据，隐藏版本记录栏
         initCode(){
+            if(this.editor){
+                console.log(this.editor)
+            }
             this.editor = CodeMirror(this.$refs.code, {
                 value: this.currentData&&this.currentData.data&&this.currentData.data.content||'',
                 lineNumbers: true,
@@ -108,27 +137,36 @@ export default {
                 showCursorWhenSelecting: true,
                 theme: "monokai",
                 tabSize: 4,
-                readOnly:this.readOnly
+                readOnly:false,
             });
         },
         hideDetial(){
             this.$emit('visibleListener', false)
         },
         switchToTemporary(){
-            this.editor.setValue(this.temporaryVersion)
-            //console.log(this.temporaryVersion);
-           /// console.log(this.editor)
+            this.index = this.TemporaryIndex;
+            this.editor.setValue(this.TemporaryContent);
+            this.versionValue = this.TemporaryVersion;
+
+        },
+        handleDataFormat(str){
+            if(str){
+                return new Date(str).toLocaleString();
+            }
         }
     },
     mounted() {
         var self = this;
         console.log(this.subjectID);
         this.subjectID!=0 && this.$store.dispatch('fetchSubject',{subjectID:this.subjectID});
-
         let timer = setInterval(() =>{
-            if(self.currentData && self.currentData.data){
+            if(self.subjectID != 0 && self.currentData && self.currentData.data){
                 clearInterval(timer);
+                self.nameValue = self.currentData.name;
+                self.versionValue = self.currentData.data.tag;
+                self.ownerValue = self.currentData.owner;
                 self.initCode();
+                this.editor.options.readOnly = true;    //这里在生成编辑器后，再来配置只读功能
             }else if(self.subjectID == 0){
                 clearInterval(timer);
                 self.initCode();
@@ -145,9 +183,8 @@ export default {
         }),
         currentData(){
             if(this.subjectID != 0 && this.subject && this.subject.history){            //第一次执行拿不到数据，第二次才拿到数据，所哟要过滤到第一次
-                console.log(this.subject.history)
                  return{
-                    owner:this.subject&&this.subject.owner&&this.subject.owner.name || '',
+                    owner:this.subject&&this.subject.owner || '',
                     name:this.subject&&this.subject.name|| '',
                     data:this.subject&&this.subject.history&&this.subject.history[this.index] || []
                 }
@@ -163,6 +200,7 @@ export default {
             if(this.subjectID!=0){
                this.wordSwitch = "编辑";
                 this.inputaDisabled = true;
+                this.inputaDisabledName = true;
                return true
             }else{
                 return  false;
@@ -221,6 +259,9 @@ export default {
                 margin-left: 50px;
                 max-width: 300px;
                 .versionNameUl{
+                    height: 190px;
+                    overflow-y: scroll;
+
                     .versionNameLi{
                         background-color:#f3f3f3;
                         border-radius: 10px;
@@ -252,7 +293,10 @@ export default {
                     text-align: center;
                     margin-top: 40px;
                 }
-
+                .tooltip{
+                    font-size: 12px;
+                    margin-top: 20px;
+                }
             }
         }
         .dialog-footer{

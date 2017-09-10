@@ -7,7 +7,6 @@ export const fetchSubjectList = (context) => {
     api.fetchSubjectList().then((data)=>{
         // data => subjecList对象
         //提交一个mutation
-        console.log(data)
         context.commit("fetchSubjectList",data)
     })
 };
@@ -21,12 +20,11 @@ export const fetchSubject = (context,args)=>{
 export const updateSubject = (context,args)=>{
     api.updateSubject(args).then((data)=>{
         context.commit("updateSubject",data)
-        console.log(data)
         if(data.success){
             context.dispatch("fetchSubjectList");
-            window.vm.$message("删除成功");
+            window.vm.$message("保存成功！");
         }else{
-            window.vm.$message.error('删除失败');
+            window.vm.$message.error('保存失败---专题名错误或系统错误');
         }
         
     })
@@ -37,7 +35,6 @@ export const updateSubject = (context,args)=>{
 export const deleteSubject = (context,args) => {
     api.deleteSubject(args).then((data)=>{
         //删除成功后重新发起拉取list的action
-        console.log(data);
         if(data.success){
             context.dispatch("fetchSubjectList");
             window.vm.$message("删除成功");
