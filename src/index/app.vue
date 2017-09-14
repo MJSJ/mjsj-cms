@@ -64,7 +64,7 @@ export default {
         // })
         // .then((data)=>{
         //     this.$store.dispatch('fetchUserList');
-        //     this.$store.dispatch('fetchTotalTopics');
+        //     this.$store.dispatch('fetchSubjectList');
         // })
 
 
