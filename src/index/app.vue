@@ -53,7 +53,7 @@ export default {
 
         if(window._DATA&&window._DATA.u){
             this.$store.dispatch('fetchUserList');
-            // this.$store.dispatch('fetchTotalTopics');
+            this.$store.dispatch('fetchSubjectList');
         }
 
 
