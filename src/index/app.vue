@@ -22,7 +22,7 @@ import SideBar from '../common/components/sideBar.vue'
 import LoginBar from '../common/components/loginBar.vue'
 import TabBar from '../common/components/tabBar.vue'
 import ComponentsBar from '../common/components/componentsBar.vue'
-
+import {mapMutations} from 'vuex'
 import api from "../common/api/api.js"
 export default {
     name: 'app',
@@ -41,34 +41,39 @@ export default {
         data: {}
     },
 
-
     //在加载后会自动执行
     mounted() {
-        
+        // window._DATA={
+        //     u:{
+        //         id:100001,
+        //         name:"旷宇",
+        //         role:2
+        //     }
+        // }
+
+        if(window._DATA&&window._DATA.u){
+            this.$store.dispatch('fetchUserList');
+            // this.$store.dispatch('fetchTotalTopics');
+        }
 
 
-        //自动登录的
-        //调完了后注释
+        //调试用
+        // api.login({
+        //     userID:"100001",
+        //     password:"ddd"
+        // })
+        // .then((data)=>{
+        //     this.$store.dispatch('fetchUserList');
+        //     this.$store.dispatch('fetchTotalTopics');
+        // })
 
-        api.login({
-            userID:"100001",
-            password:"ddd"
-        })
-        .then((data)=>{
-            console.log(data)
-
-            //触发一个action
-            this.$store.dispatch('fetchSubjectList');
-//            this.$store.dispatch('fetchUserList');
-//            this.$store.dispatch('fetchTotalTopics');
-        })
 
     },
     methods: {
-
+        ...mapMutations(['setLoginUser'])
     },
     computed: {
-
+        
     }
 }
 </script>

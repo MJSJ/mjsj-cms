@@ -17,16 +17,32 @@
 </template>
 
 <script>
-let DATA = window.__DATA || {};
+// window._DATA={
+//     u:{
+//         id:100001,
+//         name:"旷宇",
+//         role:2
+//     }
+// }
+let user = window._DATA&&window._DATA.u || {};
+import api from "../api/api.js"
 export default {
     data() {
         return {
-            name: DATA.name || ""
+            name: user.name || ""
         }
     },
     methods: {
         logout() {
-            location.href = "/page/logout";
+            api.logout().then((data)=>{
+                if(data.success){
+                    location.href = "/cms/login";
+                }else{
+                    this.$message.error('退出失败');
+                }
+            }).catch(()=>{
+                this.$message.error('退出失败');
+            })
         }
     }
 }

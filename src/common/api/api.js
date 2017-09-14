@@ -9,7 +9,8 @@ const GET_URLS = {
     fetchSubject:HOST+"/cms/fetchSubject",
     getShopBoard:HOST+"/joy/merchant/getshopboard",
     fetchUserList:HOST+"/cmc/fetchUserList",
-    fetchTotalTopics:HOST+"/cms/fetchTotalTopics"
+    fetchTotalTopics:HOST+"/cms/fetchTotalTopics",
+    logout:HOST+"cms/logout"
 }
 const POST_URLS = {
     // newUploadImage:HOST+"/joy/merchant/newuploadimage",
