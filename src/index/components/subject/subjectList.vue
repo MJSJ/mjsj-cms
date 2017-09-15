@@ -62,8 +62,6 @@ export default {
         handleEdit(index, row) {
             this.detailVisble = true;
             this.subjectID = row.id;
-            console.log(index);
-            console.log(row)
             console.log(this.subjectID)
         },
         handleDelete(index, row) {

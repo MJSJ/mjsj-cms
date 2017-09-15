@@ -31,10 +31,13 @@ export const setCurrentView = (state, view) => {
     }
 };
 
-export const setSelectedSubject = (state,paylod) =>{
+export const setSelectedSubject = (state,payload) =>{
     state.selectedSubject = payload
 }
 
+export const setLoginUser = (state,payload) =>{
+    state.loginUser = payload
+}
 export const removeCurrentView = (state, view) => {
     let ind = state.historyTabs.findIndex(item => item.id === view);
     if (ind > -1) {
