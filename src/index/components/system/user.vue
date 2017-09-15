@@ -95,40 +95,20 @@
         computed: mapState({
             userList: 'userList',
             totalTopics: 'totalTopics',
-
         }),
         mounted() {
-            //getCheckedList
-            this.refreshData();
-        },
-        watch: {
-            userList: function () {
-                this.refreshData();
-            },
-//            totalTopics:function () {
-//                console.log("总专题列表");
-//                console.log(this.totalTopics);
-//                this.refreshData();
-//            }
+            this.initValue();
         },
         methods: {
-            refreshData() {
-                this.userList.forEach((item) => {
-                    //这个copyArr传的空也要报错
-                    item.subjectList.forEach((topic) => {
-                        topic.isChecked = true;
-                    });
-                    difference(item.subjectList, this.totalTopics);
-                });
+            initValue() {
                 console.log("刷新数据");
-                console.log(this.userList);
+                console.log(this.totalTopics);
                 this.form = this.userList[0];
             },
             handleEdit(index, row) {
                 this.showDialog();
                 indexWhichClicked = index;
                 this.changeEditForm(this.userList[index]);
-                console.log(this.form);
             },
             handleDelete(index, row) {
                 this.$confirm('确认删除？')
@@ -159,6 +139,9 @@
                 subjectList.forEach((item) => {
                     newSubjectList.push(new Topic(item.id, item.name, item.isChecked));
                 });
+                difference(newSubjectList, this.totalTopics);
+                console.log("=========");
+                console.log(newSubjectList);
                 return newSubjectList;
             },
 
@@ -201,8 +184,10 @@
     }
 
     function difference(subjectList, totalTopics) {
+        console.log("totalTopics：");
+        console.log(totalTopics);
         totalTopics.forEach((item) => {
-            let index = findTopic(item.name, subjectList);
+            let index = findTopic(item.id, subjectList);
             if (index < 0) {
                 let topic = new Topic(item.id, item.name, item.isChecked);
                 subjectList.push(topic);
@@ -211,9 +196,9 @@
     }
 
 
-    function findTopic(name, ary) {
+    function findTopic(id, ary) {
         for (let i = 0; i < ary.length; i++) {
-            if (name === ary[i].name) {
+            if (id === ary[i].id) {
                 return i;
             }
         }

@@ -50,12 +50,20 @@ export const deleteSubject = (context, args) => {
 
 export const fetchUserList = (context, args) => {
     api.fetchUserList(args).then((data) => {
+        data.map(item => {
+            item.subjectList.map(topic => {
+                topic.isChecked = true;
+            })
+        });
         context.commit("fetchUserList", data)
     })
 };
 
 export const fetchTotalTopics = (context, args) => {
+    console.log("请求空闲专题");
     api.fetchTotalTopics(args).then((data) => {
+        console.log("fetchTotalTopics");
+        console.log(data);
         context.commit("fetchTotalTopics", data)
     })
 };
@@ -70,7 +78,7 @@ export const updateCompany = (context, args) => {
         } else {
             window.vm.$message.error('编辑失败');
         }
-        context.commit("fetchUserList", data.data)
+        // context.commit("fetchUserList", data.data)
     })
 };
 
