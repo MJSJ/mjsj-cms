@@ -43,6 +43,7 @@ export default {
 
     //在加载后会自动执行
     mounted() {
+        // 调试用
         // window._DATA={
         //     u:{
         //         id:100001,
@@ -50,14 +51,6 @@ export default {
         //         role:2
         //     }
         // }
-
-        if(window._DATA&&window._DATA.u){
-            this.$store.dispatch('fetchUserList');
-            this.$store.dispatch('fetchSubjectList');
-        }
-
-
-        //调试用
         // api.login({
         //     userID:"100001",
         //     password:"ddd"
@@ -66,6 +59,16 @@ export default {
         //     this.$store.dispatch('fetchUserList');
         //     this.$store.dispatch('fetchSubjectList');
         // })
+
+        /**
+         * 正式环境调用
+         * push 到master都应该把
+         * 调试的注释了
+         */
+        if(window._DATA&&window._DATA.u){
+            this.$store.dispatch('fetchUserList');
+            this.$store.dispatch('fetchSubjectList');
+        }
 
 
     },

@@ -10,11 +10,11 @@ const GET_URLS = {
     getShopBoard:HOST+"/joy/merchant/getshopboard",
     fetchUserList:HOST+"/cms/fetchUserList",
     fetchTotalTopics:HOST+"/cms/fetchTotalTopics",
-    logout:HOST+"/cms/logout"
+    logout:HOST+"/api/logout"
 }
 const POST_URLS = {
     // newUploadImage:HOST+"/joy/merchant/newuploadimage",
-    login:HOST+"/cms/login",
+    login:HOST+"/api/login",
     newUploadImage:HOST+"/joy/merchant/newuploadimage",
 
     deleteSubject:HOST+"/cms/deleteSubject",
@@ -24,10 +24,6 @@ const POST_URLS = {
 
 const JSONP_URLS = {
 
-}
-
-const LOGIN = {
-    login:HOST+"/cms/login"
 }
 
 //本地Mock数据
