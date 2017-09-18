@@ -4,7 +4,7 @@ import {get, all, local} from "./tool.js"
 import axios from "axios"
 
 export const HOST = "//mykrystal.com"
-//const HOST = "//localhost:8081"
+// const HOST = "//localhost:8081"
 const GET_URLS = {
     fetchSubjectList:HOST+"/cms/fetchSubjectList",
     fetchSubject:HOST+"/cms/fetchSubject",
