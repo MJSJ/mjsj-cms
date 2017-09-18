@@ -4,6 +4,7 @@
         <loginBar></loginBar>
 
 
+
         <el-row>
             <el-col :span="3">
                 <SideBar></SideBar>
@@ -23,7 +24,6 @@
     import ComponentsBar from '../common/components/componentsBar.vue'
     import {mapMutations} from 'vuex'
     import api from "../common/api/api.js"
-
     export default {
         name: 'app',
         components: {
@@ -33,7 +33,9 @@
             ComponentsBar
         },
         data() {
-            return {}
+            return {
+
+            }
         },
         props: {
             data: {}
@@ -41,38 +43,41 @@
 
         //在加载后会自动执行
         mounted() {
-            window._DATA = {
-                u: {
-                    id: 100001,
-                    name: "旷宇",
-                    role: 2
-                }
-            }
+            // 调试用
+            // window._DATA={
+            //     u:{
+            //         id:100001,
+            //         name:"旷宇",
+            //         role:2
+            //     }
+            // }
+            // api.login({
+            //     userID:"100001",
+            //     password:"ddd"
+            // })
+            // .then((data)=>{
+            //     this.$store.dispatch('fetchUserList');
+            //     this.$store.dispatch('fetchSubjectList');
+            // })
 
-            if (window._DATA && window._DATA.u) {
+            /**
+             * 正式环境调用
+             * push 到master都应该把
+             * 调试的注释了
+             */
+            if(window._DATA&&window._DATA.u){
                 this.$store.dispatch('fetchUserList');
                 this.$store.dispatch('fetchSubjectList');
-                this.$store.dispatch('fetchTotalTopics', {status: 1});
             }
-
-
-            //调试用
-//            api.login({
-//                userID: "100001",
-//                password: "ddd"
-//            })
-//                .then((data) => {
-//                    this.$store.dispatch('fetchUserList');
-//                    this.$store.dispatch('fetchSubjectList');
-//                    this.$store.dispatch('fetchTotalTopics', {status: 1});
-//                })
 
 
         },
         methods: {
             ...mapMutations(['setLoginUser'])
         },
-        computed: {}
+        computed: {
+
+        }
     }
 </script>
 
