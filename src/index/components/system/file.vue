@@ -43,18 +43,14 @@ import {HOST} from "../../../common/api/api.js"
             uploadFile(e){
                 this.hasSelectedFile = true;
                 this.startProgress();
-                setTimeout(()=>{
-                    let data = ["/services/static/tttdel7/.DS_Store","/services/static/tttdel7/._.DS_Store","/services/static/tttdel7/hhh.txt","/services/static/tttdel7/._hhh.txt"]
-                    // api.uploadFile(e.srcElement.files[0]).then((data)=>{
-                    //     if(!data||data.length<0){
-                    //         this.$message.error("上传失败")
-                    //         this.hasSelectedFile = false;
-                    //     }
-                        let result = this.composeFile(data);
-                        this.result = result;
-                        this.percentage = 100;
-                    // })
-                },2000)
+                api.uploadFile(e.srcElement.files[0]).then((data)=>{
+                    if(!data||data.length<0){
+                        this.$message.error("上传失败")
+                        this.hasSelectedFile = false;
+                    }
+                    this.result = this.composeFile(data);
+                    this.percentage = 100;
+                })
             },
             startProgress(){
                 if(this.percentage<90){
@@ -65,6 +61,12 @@ import {HOST} from "../../../common/api/api.js"
                 }
             },
             composeFile(arr){
+                /**
+                 * 
+                 *    未实现！！！
+                 * 
+                 * 把mac的以.开头的文件过滤到
+                 */
                 let result = [];
                 arr.map((item)=>{
                     if(item.indexOf(".")==0)
@@ -77,9 +79,7 @@ import {HOST} from "../../../common/api/api.js"
             }
         },
         mounted(){
-            // setTimeout(()=>{
-            //     this.hasSelectedFile = true
-            // },2000)
+        
         }
     }
 </script>
