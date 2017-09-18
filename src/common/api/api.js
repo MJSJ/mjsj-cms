@@ -9,7 +9,7 @@ const GET_URLS = {
     fetchSubject:HOST+"/cms/fetchSubject",
     getShopBoard:HOST+"/joy/merchant/getshopboard",
     fetchUserList:HOST+"/cms/fetchUserList",
-    fetchTotalTopics:HOST+"/cms/fetchSubjectList"
+    fetchTotalTopics:HOST+"/cms/fetchSubjectList",
     logout:HOST+"/cms/logout"
 }
 const POST_URLS = {

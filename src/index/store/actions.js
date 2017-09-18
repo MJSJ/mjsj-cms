@@ -50,6 +50,8 @@ export const deleteSubject = (context, args) => {
 
 export const fetchUserList = (context, args) => {
     api.fetchUserList(args).then((data) => {
+        console.log("fetchUserList");
+        console.log(data);
         data.map(item => {
             item.subjectList.map(topic => {
                 topic.isChecked = true;
