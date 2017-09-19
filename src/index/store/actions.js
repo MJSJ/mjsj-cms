@@ -61,12 +61,10 @@ export const fetchUserList = (context, args) => {
     })
 };
 
-export const fetchTotalTopics = (context, args) => {
+export const fetchTotalSubjects = (context, args) => {
     console.log("请求空闲专题");
-    api.fetchTotalTopics(args).then((data) => {
-        console.log("fetchTotalTopics");
-        console.log(data);
-        context.commit("fetchTotalTopics", data)
+    api.fetchTotalSubjects(args).then((data) => {
+        context.commit("fetchTotalSubjects", data)
     })
 };
 
@@ -75,7 +73,7 @@ export const updateCompany = (context, args) => {
         //删除成功后重新发起拉取list的action
         if (data.success) {
             context.dispatch("fetchUserList");
-            context.dispatch('fetchTotalTopics', {status: 1});
+            context.dispatch('fetchTotalSubjects', {status: 1});
             window.vm.$message("编辑成功");
         } else {
             window.vm.$message.error('编辑失败');
@@ -89,7 +87,7 @@ export const deleteUser = (context, args) => {
         //删除成功后重新发起拉取list的action
         if (data.success) {
             context.dispatch("fetchUserList");
-            context.dispatch('fetchTotalTopics', {status: 1});
+            context.dispatch('fetchTotalSubjects', {status: 1});
             window.vm.$message("删除成功");
         } else {
             window.vm.$message.error('删除失败');

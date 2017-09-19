@@ -6,29 +6,28 @@ import * as mutations from './mutations';
 import subject from "./modules/subject";
 import system from "./modules/system";
 
-export default function generateStore(baseargs){
+export default function generateStore(baseargs) {
     return {
         state: {
             baseargs: baseargs,
             ajaxData: null,
-            subjectList:null, //db.subjectList
-            info:"",
+            subjectList: null, //db.subjectList
+            info: "",
             currentView: '',
             tabs: tabs,
             historyTabs: [],
-            subject:null,
-            selectedSubject:{},
-            loginUser:{
-                role:1
+            subject: null,
+            selectedSubject: {},
+            loginUser: {
+                role: 1
             },
-            userList:{
-                
-            },
-            addSubject:null
+            userList: {},
+            totalSubjects: {},
+            addSubject: null
         },
         mutations,
         actions,
-        modules:{
+        modules: {
             subject,
             system,
         }

@@ -6,45 +6,44 @@
         </div>
 
         <input type="file" v-show="false" id="fileHelper" ref="fileHelper" @change="uploadFile">
-
+        <div>只能上传以.zip为后缀的文件</div>
         <el-table
-            :data="result"
-            v-show="result&&result.length>0"
-            style="width: 100%">
+                :data="result"
+                v-show="result&&result.length>0"
+                style="width: 100%">
             <el-table-column
-                prop="url"
-                label="文件路径"
-                >
+                    prop="url"
+                    label="文件路径"
+            >
             </el-table-column>
         </el-table>
     </div>
 </template>
 
 <script>
-import api from "../../../common/api/api.js"
-import {HOST} from "../../../common/api/api.js"
+    import api from "../../../common/api/api.js"
+    import {HOST} from "../../../common/api/api.js"
+
     export default {
         data() {
             return {
-                hasSelectedFile:false,
-                percentage:0,
-                result:[]
+                hasSelectedFile: false,
+                percentage: 0,
+                result: []
             }
         },
-        computed:{
-            
-        },
+        computed: {},
         methods: {
-            selectFile(){
-            　  var evt = document.createEvent("MouseEvents");  
-                evt.initEvent("click", true, true);  
-                this.$refs["fileHelper"].dispatchEvent(evt); 
+            selectFile() {
+                var evt = document.createEvent("MouseEvents");
+                evt.initEvent("click", true, true);
+                this.$refs["fileHelper"].dispatchEvent(evt);
             },
-            uploadFile(e){
+            uploadFile(e) {
                 this.hasSelectedFile = true;
                 this.startProgress();
-                api.uploadFile(e.srcElement.files[0]).then((data)=>{
-                    if(!data||data.length<0){
+                api.uploadFile(e.srcElement.files[0]).then((data) => {
+                    if (!data || data.length < 0) {
                         this.$message.error("上传失败")
                         this.hasSelectedFile = false;
                     }
@@ -52,49 +51,55 @@ import {HOST} from "../../../common/api/api.js"
                     this.percentage = 100;
                 })
             },
-            startProgress(){
-                if(this.percentage<90){
-                    this.percentage+=Math.ceil(Math.random()*10)
-                    setTimeout(()=>{
+            startProgress() {
+                if (this.percentage < 90) {
+                    this.percentage += Math.ceil(Math.random() * 10)
+                    setTimeout(() => {
                         this.startProgress();
-                    },300)
+                    }, 300)
                 }
             },
-            composeFile(arr){
+            composeFile(arr) {
                 /**
-                 * 
+                 *
                  *    未实现！！！
-                 * 
+                 *
                  * 把mac的以.开头的文件过滤到
                  */
                 let result = [];
-                arr.map((item)=>{
-                    if(item.indexOf(".")==0)
-                        return
-                    result.push({
-                        url:HOST+item.replace(/\/services/,'')
+                console.log(arr);
+                if (arr.length > 0) {
+                    arr.map((item) => {
+                        if (item.indexOf(".") == 0)
+                            return
+                        result.push({
+                            url: HOST + item.replace(/\/services/, '')
+                        })
                     })
-                })
+                } else {
+                    this.$message.error("上传失败");
+                }
+                this.hasSelectedFile = false;
                 return result
             }
         },
-        mounted(){
-        
+        mounted() {
+
         }
     }
 </script>
 <style lang="less" rel="stylesheet/less">
-    .file_container{
+    .file_container {
 
-        .file-uploader  {
+        .file-uploader {
             border: 1px dashed #d9d9d9;
             border-radius: 6px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            width:126px;
+            width: 126px;
             height: 126px;
-            margin-bottom:30px;
+            margin-bottom: 30px;
         }
         .file-uploader:hover {
             border-color: #20a0ff;
@@ -107,6 +112,6 @@ import {HOST} from "../../../common/api/api.js"
             line-height: 126px;
             text-align: center;
         }
-        
+
     }
 </style>

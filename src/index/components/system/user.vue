@@ -16,7 +16,8 @@
                 <el-table-column label="专题">
                     <template scope="scope">
                         <el-button size="small" type="text" v-for="item in scope.row.subjectList"
-                                   v-text="item.name" v-if="item.isChecked"></el-button>
+                                   v-text="item.name" v-if="item.isChecked"
+                                   @click="handleTopic(scope.$index,item)"></el-button>
                     </template>
                 </el-table-column>
 
@@ -57,11 +58,14 @@
                 <el-button type="primary" @click="handleEditConfirm">确 定</el-button>
             </div>
         </el-dialog>
+
+        <subjectDetail v-if="detailVisble" @visibleListener="visibleListener" :subjectID="subjectID"></subjectDetail>
     </div>
 </template>
 
 <script>
     import {mapState} from 'vuex'
+    import subjectDetail from "../subject/components/subjectDetail.vue"
 
     function Topic(id, name, isChecked) {
         this.id = id;
@@ -81,7 +85,9 @@
     let indexWhichClicked = 0;
 
     export default {
-        components: {},
+        components: {
+            'subjectDetail': subjectDetail
+        },
         data() {
             return {
                 dialogFormVisible: false,
@@ -90,20 +96,30 @@
                 warningHint: "",
                 isShowWarning: false,
                 isAddUser: false,
+                detailVisble: false,
+                subjectID: 0
             }
         },
         computed: mapState({
             userList: 'userList',
-            totalTopics: 'totalTopics',
+            totalSubjects: 'totalSubjects',
         }),
         mounted() {
             this.initValue();
         },
         methods: {
+            visibleListener(value) {
+                this.detailVisble = value
+            },
             initValue() {
                 console.log("刷新数据");
-                console.log(this.totalTopics);
+                console.log(this.totalSubjects);
                 this.form = this.userList[0];
+            },
+            handleTopic(index, topic) {
+                this.subjectID = topic.id;
+                this.detailVisble = true;
+                console.log("this.subjectID :" + this.subjectID)
             },
             handleEdit(index, row) {
                 this.showDialog();
@@ -121,7 +137,7 @@
             },
             handleAdd() {
                 this.showDialog();
-                this.changeEditForm(new Form("", "", "", "", this.totalTopics));
+                this.changeEditForm(new Form("", "", "", "", this.totalSubjects));
                 this.isAddUser = true;
             },
             handleCheckedTopicsChange(index) {
@@ -139,7 +155,7 @@
                 subjectList.forEach((item) => {
                     newSubjectList.push(new Topic(item.id, item.name, item.isChecked));
                 });
-                difference(newSubjectList, this.totalTopics);
+                difference(newSubjectList, this.totalSubjects);
                 console.log("=========");
                 console.log(newSubjectList);
                 return newSubjectList;
@@ -183,10 +199,10 @@
         return currentForm;
     }
 
-    function difference(subjectList, totalTopics) {
-        console.log("totalTopics：");
-        console.log(totalTopics);
-        totalTopics.forEach((item) => {
+    function difference(subjectList, totalSubjects) {
+        console.log("totalSubjects：");
+        console.log(totalSubjects);
+        totalSubjects.forEach((item) => {
             let index = findTopic(item.id, subjectList);
             if (index < 0) {
                 let topic = new Topic(item.id, item.name, item.isChecked);

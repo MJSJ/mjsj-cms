@@ -10,7 +10,7 @@ const GET_URLS = {
     fetchSubject:HOST+"/cms/fetchSubject",
     getShopBoard:HOST+"/joy/merchant/getshopboard",
     fetchUserList:HOST+"/cms/fetchUserList",
-    fetchTotalTopics:HOST+"/cms/fetchSubjectList",
+    fetchTotalSubjects:HOST+"/cms/fetchSubjectList",
     logout:HOST+"/cms/logout"
 }
 const POST_URLS = {
@@ -38,7 +38,7 @@ const LOCAL_URLS = {
     deleteSubject: db.result,
     fetchSubject: db.subject,
     // fetchUserList: db.userList,
-    // fetchTotalTopics: db.totalTopics
+    // fetchTotalSubjects: db.totalSubjects
 }
 
 function uploadFile(file){

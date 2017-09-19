@@ -10,8 +10,11 @@ export const fetchUserList = (state, payload) => {
     state.userList = payload;
 };
 
-export const fetchTotalTopics = (state, payload) => {
-    state.totalTopics = payload;
+export const fetchTotalSubjects = (state, payload) => {
+    console.log("fetchTotalSubjects:");
+    state.totalSubjects = payload;
+    console.log(state.totalSubjects);
+    console.log(payload);
 };
 
 export const fetchSubject = (state, payload) => {
@@ -31,11 +34,11 @@ export const setCurrentView = (state, view) => {
     }
 };
 
-export const setSelectedSubject = (state,payload) =>{
+export const setSelectedSubject = (state, payload) => {
     state.selectedSubject = payload
 }
 
-export const setLoginUser = (state,payload) =>{
+export const setLoginUser = (state, payload) => {
     state.loginUser = payload
 }
 export const removeCurrentView = (state, view) => {
