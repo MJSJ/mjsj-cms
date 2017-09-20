@@ -7,7 +7,6 @@ export const fetchSubjectList = (context) => {
     api.fetchSubjectList().then((data) => {
         // data => subjecList对象
         //提交一个mutation
-        console.log(data)
         context.commit("fetchSubjectList", data)
     })
 };
@@ -21,10 +20,9 @@ export const fetchSubject = (context, args) => {
 export const updateSubject = (context, args) => {
     api.updateSubject(args).then((data) => {
         context.commit("updateSubject", data)
-        console.log(data)
         if (data.success) {
             context.dispatch("fetchSubjectList");
-            window.vm.$message("删除成功");
+            window.vm.$message("保存成功");
         } else {
             window.vm.$message.error('删除失败');
         }
@@ -36,7 +34,6 @@ export const updateSubject = (context, args) => {
 export const deleteSubject = (context, args) => {
     api.deleteSubject(args).then((data) => {
         //删除成功后重新发起拉取list的action
-        console.log(data);
         if (data.success) {
             context.dispatch("fetchSubjectList");
             window.vm.$message("删除成功");
@@ -50,8 +47,6 @@ export const deleteSubject = (context, args) => {
 
 export const fetchUserList = (context, args) => {
     api.fetchUserList(args).then((data) => {
-        console.log("fetchUserList");
-        console.log(data);
         data.map(item => {
             item.subjectList.map(topic => {
                 topic.isChecked = true;
@@ -62,10 +57,7 @@ export const fetchUserList = (context, args) => {
 };
 
 export const fetchTotalTopics = (context, args) => {
-    console.log("请求空闲专题");
     api.fetchTotalTopics(args).then((data) => {
-        console.log("fetchTotalTopics");
-        console.log(data);
         context.commit("fetchTotalTopics", data)
     })
 };
