@@ -63,8 +63,8 @@ export default {
             versionValue:'',
             ownerValue:'',
             TemporaryDisabled:true,    //临时版本按钮 ，只要在切换版本之后才能点击
-            TemporaryVersion:''
-
+            TemporaryVersion:'',
+            lastSubject:null
 
 
 
@@ -158,9 +158,13 @@ export default {
     mounted() {
         var self = this;
         console.log(this.subjectID);
-        this.subjectID!=0 && this.$store.dispatch('fetchSubject',{subjectID:this.subjectID});
+        self.lastSubject = self.subject;
+        self.subjectID!=0 && self.$store.dispatch('fetchSubject',{subjectID:self.subjectID});
+        console.log(this.subject);
+        setTimeout(() =>{console.log(this.subject)},1000);
+        //debugger;
         let timer = setInterval(() =>{
-            if(self.subjectID != 0 && self.currentData && self.currentData.data){
+            if(self.subjectID != 0 && self.currentData && self.currentData.data && self.subject!= self.lastSubject){
                 clearInterval(timer);
                 self.nameValue = self.currentData.name;
                 self.versionValue = self.currentData.data.tag;
@@ -212,140 +216,4 @@ export default {
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" rel="stylesheet/less">
-.subject_list {
-     max-width: 780px;
-     .el-button--success{
-        width: 90px;
-        height: 50px;
-        margin-bottom: 12px;
-        font-size: 20px;
-     }
-    .el-dialog{
-        .el-dialog__header{
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        .tag_area{
-            display: flex;
-            margin-bottom: 20px;
-            max-width:70%;
-            .tag_cell{
-                display: flex;
-                flex: 1;
-                .el-tag{
-                    height: 36px;
-                    line-height: 36px;
-                    margin-right: 10px;
-                    min-width:60px;
-                    text-align: center;
-                }
-                .el-input{
-                    width: 120px;
-                    margin-right: 10px;
-                }
-                
-            }
-        }
-        .version_area{
-            display: flex;
-            min-height: 400px;
-            .text_area{
-                flex: 2;
-                // background: #ccc;
-            }
-            .select_area{
-                flex: 1;
-                margin-left: 50px;
-                max-width: 300px;
-                .versionNameUl{
-                    height: 190px;
-                    overflow-y: scroll;
 
-                    .versionNameLi{
-                        background-color:#f3f3f3;
-                        border-radius: 10px;
-                        text-indent: 1em;   
-                        cursor: pointer;
-                        height:40px;
-                        line-height: 40px;
-                        text-align: center;
-                        transition: .5s all ease;
-                        margin-bottom:10px;
-                    }
-                    .versionNameLi_title{
-                        background-color: #1d90e6;
-                        color: #fff;
-                    }
-                    .bmg_e5{
-                        background-color: #4caf50;
-                        color: #fff;
-                    }
-                }
-                .msg_cell{
-                    margin: 20px 0 10px 0;
-                    .el-tag{
-                        min-width: 50px;
-                        text-align: center;
-                    }
-                }
-                .temporary_version{
-                    text-align: center;
-                    margin-top: 40px;
-                }
-                .tooltip{
-                    font-size: 12px;
-                    margin-top: 20px;
-                }
-            }
-        }
-        .dialog-footer{
-            text-align: center;
-        }
-    }
-    .el-form-item__content {
-        text-align: left;
-    }
-
-    .time_to {
-        text-align: center;
-    }
-
-    .time_sync {
-        margin-left: 1em;
-    }
-
-    .product_confirm {
-        margin-left: 1em;
-    }
-
-    .baseinfo {
-        margin-top: 20px;
-    }
-
-    .s_item {
-        &:after {
-            content: "、";
-            display: inline-block;
-        }
-        &:last-child {
-            &:after {
-                content: "";
-            }
-        }
-    }
-
-    .semi {
-        &:after {
-            content: ";";
-            display: inline-block;
-        }
-        &:last-child {
-            &:after {
-                content: "";
-            }
-        }
-    }
-
-}
-</style>
