@@ -113,6 +113,17 @@ export function post(urls){
     return _obj
 }
 
+export function csrf(urls){
+    let _obj={};
+    for (let item in urls){
+        _obj[item] = function(baseargs){
+            return _post(urls[item],Object.assign({_csrf:window._DATA._csrf},baseargs));
+        }
+    }
+    return _obj
+}
+
+
 export function jsonp(urls){
     let _obj={};
     for (let item in urls){
@@ -123,7 +134,7 @@ export function jsonp(urls){
     return _obj
 }
 
-export function all(getUrls,postUrls,fetchJsonpUrls){
+export function all(getUrls,postUrls,csrfUrls,fetchJsonpUrls){
     const _obj = {
         ...get(getUrls),
         ...post(postUrls),
