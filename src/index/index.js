@@ -6,14 +6,16 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 // 引入样式
 import './index.less';
+
+
 // 根vue component
 import App from './app.vue'
 // store对象生成器
 import generateStore from './store/store.js'
 
-
+//引入主题
+import '../../theme/index.css'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
 Vue.use(ElementUI)
 
 function renderPage(storeObj) {

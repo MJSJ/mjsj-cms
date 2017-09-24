@@ -1,30 +1,41 @@
 <template>
     <div class="subject_list">
         <el-button size="small" type="success" @click="showDetail()">新增</el-button>
-        <el-table border :data="subjectList" style="width: 100%">  
-            <el-table-column prop="id" label="ID" width="120">
-            </el-table-column>
-    
-            <el-table-column prop="name" label="名称" width="180">
-            </el-table-column>
-    
-            <el-table-column label="操作" width="180">
-                <template scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-    
-            <el-table-column label="上次编辑" width="300">
-                <template scope="scope">
-                    <div slot="reference" v-if="scope.row.lastEdit">
-                        {{scope.row.lastEdit.userName}}--{{scope.row.lastEdit.time}}
-                    </div>
-                </template>
-            </el-table-column>
-    
-        </el-table>
+        <div class="table_container" style="min-height: 450px">
+            <el-table border :data="totalSubjectList[currentIndex]">
+                <el-table-column prop="id" label="ID" width="200">
+                </el-table-column>
 
+                <el-table-column prop="name" label="名称" width="300">
+                </el-table-column>
+
+                <el-table-column label="操作" width="300">
+                    <template scope="scope">
+                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="上次编辑" >
+                    <template scope="scope">
+                        <div slot="reference" v-if="scope.row.lastEdit">
+                            {{scope.row.lastEdit.userName}}--{{handleDataFormat(scope.row.lastEdit.time)}}
+                        </div>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+        </div>
+        <div class="block" style="padding-left: 75%;">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage"
+                    :page-size="10"
+                    layout="total, prev, pager, next"
+                    :total="totalPages">
+            </el-pagination>
+        </div>
         <subjectDetail v-if="detailVisble" @visibleListener="visibleListener" :subjectID="subjectID"></subjectDetail>
     </div>
 </template>
@@ -37,7 +48,11 @@ export default {
     data() {
         return {    
             detailVisble:false,
-            subjectID:0//选中的subject，0为初始状态
+            subjectID:0,//选中的subject，0为初始状态
+            currentPage:1,
+            totalPages:0,
+            totalSubjectList:[],
+            currentIndex:0,
         }
     },
 
@@ -77,17 +92,57 @@ export default {
             this.$nextTick(() =>{
                  this.detailVisble = true;
             })
-           
-           
         },
         visibleListener(value){
             this.detailVisble = value
+        },
+
+        //分页
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+           this.currentIndex = val - 1;
+        },
+        handleArr(array,size){
+            if(array && array instanceof Array){
+                var result = [];
+                for (var x = 0; x < Math.ceil(array.length / size); x++) {
+                    var start = x * size;
+                    var end = start + size;
+                    result.push(array.slice(start, end));
+                }
+                return result;
+            }
+        },
+        //处理数据10条一页
+        handleData(arr){
+            if(arr && arr instanceof Array){
+                var length = arr.length;
+                this.totalPages = length;
+                if(length <= 10){
+                    this.totalSubjectList.push(arr);
+                    console.log(this.totalSubjectList[0])
+                }else{
+
+                   this.total = Math.floor(length/10) + 1;
+                   this.totalSubjectList = this.handleArr(this.subjectList,10);
+                   console.log(this.totalSubjectList)
+                }
+            }
+        },
+        handleDataFormat(str){
+            if(str){
+                return new Date(str).toLocaleString();
+            }
         }
     },
     mounted() {
         // this.$store.dispatch("fetchSubject");
         //监听子组件的visible
         //console.log(this.subjectList)
+        this.totalPages = this.subjectList.length;
+        this.handleData(this.subjectList);
     },
     
     //通过mapState方法，
@@ -103,7 +158,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" rel="stylesheet/less">
 .subject_list {
-     max-width: 780px;
      .el-button--success{
         width: 90px;
         height: 50px;
@@ -130,18 +184,61 @@ export default {
                     width: 120px;
                     margin-right: 10px;
                 }
-                
+
             }
         }
         .version_area{
             display: flex;
             min-height: 400px;
             .text_area{
-                flex: 2;
-                // background: #ccc;
+                flex: 1;
             }
             .select_area{
-                flex: 1
+                flex: 1;
+                margin-left: 50px;
+                max-width: 300px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                padding: 5px;
+                background-color: aliceblue;
+                .versionNameUl{
+                    height: 190px;
+                    overflow-y: scroll;
+                    .versionNameLi{
+                        background-color:#f3f3f3;
+                        border-radius: 10px;
+                        text-indent: 1em;
+                        cursor: pointer;
+                        height:40px;
+                        line-height: 40px;
+                        text-align: center;
+                        transition: .5s all ease;
+                        margin-bottom:10px;
+                    }
+                    .versionNameLi_title{
+                        background-color: #1d90e6;
+                        color: #fff;
+                    }
+                    .bmg_e5{
+                        background-color: #4caf50;
+                        color: #fff;
+                    }
+                }
+                .msg_cell{
+                    margin: 20px 0 10px 0;
+                    .el-tag{
+                        min-width: 50px;
+                        text-align: center;
+                    }
+                }
+                .temporary_version{
+                    text-align: center;
+                    margin-top: 40px;
+                }
+                .tooltip{
+                    font-size: 12px;
+                    margin-top: 20px;
+                }
             }
         }
         .dialog-footer{

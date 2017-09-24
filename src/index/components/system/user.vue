@@ -1,9 +1,8 @@
 <template>
     <div class="user_container">
         <el-button style="margin-bottom: 10px;width: 100px" @click="handleAdd">添加用户</el-button>
-        <div class="user_list">
-            <el-table border :data="userList" style="width: 100%">
-
+        <div class="user_list" style="min-height: 450px">
+            <el-table border :data="totalSubjectList[currentIndex]" style="width: 100%">
                 <el-table-column prop="id" label="用户名">
                 </el-table-column>
 
@@ -57,6 +56,16 @@
                 <el-button type="primary" @click="handleEditConfirm">确 定</el-button>
             </div>
         </el-dialog>
+        <div class="block" style="padding-left: 75%;margin-top: 50px">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage"
+                    :page-size="10"
+                    layout="total, prev, pager, next"
+                    :total="totalPages">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -90,6 +99,12 @@
                 warningHint: "",
                 isShowWarning: false,
                 isAddUser: false,
+
+                currentPage:1,
+                totalPages:0,
+                totalSubjectList:[],
+                currentIndex:0,
+
             }
         },
         computed: mapState({
@@ -97,6 +112,10 @@
             totalTopics: 'totalTopics',
         }),
         mounted() {
+
+            this.totalPages = this.userList.length;
+            this.handleData(this.userList);
+
             this.initValue();
         },
         methods: {
@@ -169,7 +188,44 @@
             showDialog() {
                 this.dialogFormVisible = true;
                 this.isShowWarning = false;
-            }
+            },
+
+
+
+            //分页
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                this.currentIndex = val - 1;
+            },
+            handleArr(array,size){
+                if(array && array instanceof Array){
+                    var result = [];
+                    for (var x = 0; x < Math.ceil(array.length / size); x++) {
+                        var start = x * size;
+                        var end = start + size;
+                        result.push(array.slice(start, end));
+                    }
+                    return result;
+                }
+            },
+            //处理数据10条一页
+            handleData(arr){
+                if(arr && arr instanceof Array){
+                    var length = arr.length;
+                    this.totalPages = length;
+                    if(length <= 10){
+                        this.totalSubjectList.push(arr);
+                        console.log(this.totalSubjectList[0])
+                    }else{
+
+                        this.total = Math.floor(length/10) + 1;
+                        this.totalSubjectList = this.handleArr(this.userList,10);
+                        console.log(this.totalSubjectList)
+                    }
+                }
+            },
         }
     }
 

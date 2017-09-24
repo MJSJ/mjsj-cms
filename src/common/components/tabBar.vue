@@ -43,4 +43,7 @@ export default {
         border-top: 0;
         border-radius: 0;
     }
+    .el-tabs--card>.el-tabs__header .el-tabs__item.is-active.is-closable{
+        padding: 0 50px 0 50px;
+    }
 </style>

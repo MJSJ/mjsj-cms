@@ -13,7 +13,9 @@ export const fetchSubjectList = (context) => {
 
 export const fetchSubject = (context, args) => {
     api.fetchSubject(args).then((data) => {
-        context.commit("fetchSubject", data)
+        context.commit("fetchSubject", data);
+        console.log('ggggggggggg');
+
     })
 }
 

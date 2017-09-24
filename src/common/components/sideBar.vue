@@ -54,6 +54,7 @@ export default {
     .side_bar{
         background-color:#eef1f6;
     }
+
 </style>
 
 
