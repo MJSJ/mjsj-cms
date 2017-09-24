@@ -1,6 +1,6 @@
 import * as db from "./db.js"
 
-import {get, all, local} from "./tool.js"
+import {get, all, local,csrf} from "./tool.js"
 import axios from "axios"
 
 export const HOST = "//mykrystal.com"
@@ -20,10 +20,17 @@ const POST_URLS = {
 
     deleteSubject:HOST+"/cms/deleteSubject",
 
-    updateSubject:HOST+"/cms/updateSubject",
+    // updateSubject:HOST+"/cms/updateSubject",
 
-    updateCompany: HOST + "/cms/updateCompany",
+    // updateCompany: HOST + "/cms/updateCompany",
     deleteUser: HOST + "/cms/deleteUser",
+}
+
+
+//需要csrf的请求
+const CSRF_URLS = {
+    updateCompany: HOST + "/cms/updateCompany",
+    updateSubject:HOST+"/cms/updateSubject",
 }
 
 const UPLOAD_FILE_URL = HOST+"/batchUpload"
@@ -64,7 +71,8 @@ function uploadFile(file){
 }
 
 const api = {
-    ...all(GET_URLS, POST_URLS, JSONP_URLS),
+    ...all(GET_URLS, POST_URLS,JSONP_URLS),
+    ...csrf(CSRF_URLS),
     uploadFile,
     //...local(LOCAL_URLS)//将请求mock到本地，有线上接口后注释本行
 }

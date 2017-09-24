@@ -56,6 +56,7 @@
                  password:"ddd"
              })
              .then((data)=>{
+                 window._DATA._csrf = data._csrf;
                  this.$store.dispatch('fetchUserList');
                  this.$store.dispatch('fetchSubjectList');
                  this.$store.dispatch('fetchTotalTopics', {status: 1});

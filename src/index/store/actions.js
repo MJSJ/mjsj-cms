@@ -2,6 +2,9 @@
  * Created by yf on 2017/8/16.
  */
 import api from "../../common/api/api.js";
+// window._DATA
+// const CRSF = window._DATA._csrf || ''
+
 
 export const fetchSubjectList = (context) => {
     api.fetchSubjectList().then((data) => {
