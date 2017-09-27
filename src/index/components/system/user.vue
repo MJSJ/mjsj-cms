@@ -102,20 +102,33 @@
 
                 currentPage:1,
                 totalPages:0,
-                totalSubjectList:[],
                 currentIndex:0,
 
             }
         },
-        computed: mapState({
-            userList: 'userList',
-            totalTopics: 'totalTopics',
-        }),
+        computed:{
+            ...mapState({
+                userList: 'userList',
+                totalTopics: 'totalTopics',
+            }),
+            totalSubjectList(){
+                //处理数据10条一页
+                var arr = this.userList;
+                    if(arr && arr instanceof Array){
+                        var length = arr.length;
+                        this.totalPages = length;
+                        if(length <= 10){
+                            return [arr];
+                        }else{
+                            this.total = Math.floor(length/10) + 1;
+                           return this.handleArr(arr,10);
+                        }
+                    }
+            }
+        },
         mounted() {
 
             this.totalPages = this.userList.length;
-            this.handleData(this.userList);
-
             this.initValue();
         },
         methods: {
@@ -208,22 +221,6 @@
                         result.push(array.slice(start, end));
                     }
                     return result;
-                }
-            },
-            //处理数据10条一页
-            handleData(arr){
-                if(arr && arr instanceof Array){
-                    var length = arr.length;
-                    this.totalPages = length;
-                    if(length <= 10){
-                        this.totalSubjectList.push(arr);
-                        console.log(this.totalSubjectList[0])
-                    }else{
-
-                        this.total = Math.floor(length/10) + 1;
-                        this.totalSubjectList = this.handleArr(this.userList,10);
-                        console.log(this.totalSubjectList)
-                    }
                 }
             },
         }

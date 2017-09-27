@@ -3,7 +3,7 @@ import * as db from "./db.js"
 import {get, all, local,csrf} from "./tool.js"
 import axios from "axios"
 
-export const HOST = "//mykrystal.com"
+export const HOST = "https://mykrystal.com"
 // const HOST = "//localhost:8081"
 const GET_URLS = {
     fetchSubjectList:HOST+"/cms/fetchSubjectList",

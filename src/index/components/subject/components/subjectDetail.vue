@@ -23,7 +23,7 @@
                             <li class="versionNameLi versionNameLi_title">历史版本</li>
                             <li @click="switchVersion($index)" class="versionNameLi"  v-for="(item,$index) in subject.history"  :key="item.id" :class="$index == index ? bmg_e5Class : ''">{{item.tag}}</li>
                         </ul>
-                        <div class="msg_cell"><el-tag type="primary">操作人</el-tag>：<el-tag type="primary">{{currentData && currentData.data.userName}}</el-tag></div>
+                        <div class="msg_cell" style="border-top: 1px solid #cccccc;padding-top: 10px"><el-tag type="primary">操作人</el-tag>：<el-tag type="primary">{{currentData && currentData.data.userName}}</el-tag></div>
                         <div class="msg_cell"><el-tag type="primary">时间</el-tag>：<el-tag type="primary">{{currentData && handleDataFormat(currentData.data.time)}}</el-tag></div>
                         <div class="temporary_version">
                                 <el-button :disabled="TemporaryDisabled" type="info" @click="switchToTemporary">临时版本({{TemporaryVersion}})</el-button>
@@ -65,10 +65,6 @@ export default {
             TemporaryDisabled:true,    //临时版本按钮 ，只要在切换版本之后才能点击
             TemporaryVersion:'',
             lastSubject:null
-
-
-
-
         }
     },
     props:{

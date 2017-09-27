@@ -51,8 +51,8 @@ export default {
             subjectID:0,//选中的subject，0为初始状态
             currentPage:1,
             totalPages:0,
-            totalSubjectList:[],
             currentIndex:0,
+            //totalSubjectList:[]
         }
     },
 
@@ -115,6 +115,11 @@ export default {
                 return result;
             }
         },
+        handleDataFormat(str){
+            if(str){
+                return new Date(str).toLocaleString();
+            }
+        },
         //处理数据10条一页
         handleData(arr){
             if(arr && arr instanceof Array){
@@ -122,35 +127,39 @@ export default {
                 this.totalPages = length;
                 if(length <= 10){
                     this.totalSubjectList.push(arr);
-                    console.log(this.totalSubjectList[0])
                 }else{
-
-                   this.total = Math.floor(length/10) + 1;
-                   this.totalSubjectList = this.handleArr(this.subjectList,10);
-                   console.log(this.totalSubjectList)
+                    this.total = Math.floor(length/10) + 1;
+                    this.totalSubjectList = this.handleArr(this.subjectList,10);
                 }
             }
         },
-        handleDataFormat(str){
-            if(str){
-                return new Date(str).toLocaleString();
-            }
-        }
     },
     mounted() {
-        // this.$store.dispatch("fetchSubject");
-        //监听子组件的visible
-        //console.log(this.subjectList)
         this.totalPages = this.subjectList.length;
-        this.handleData(this.subjectList);
+        //this.handleData(this.subjectList);
+        console.log(this.totalSubjectList)
     },
     
     //通过mapState方法，
     //直接从根store里取
-    computed: mapState({ 
-        subjectList:'subjectList',
-        subject:'subject'
-    })  
+    computed:{
+        ...mapState({
+            subjectList:'subjectList',
+            subject:'subject'
+        }),
+        totalSubjectList(){
+            if(this.subjectList && this.subjectList instanceof Array){
+                var length = this.subjectList.length;
+                this.totalPages = length;
+                if(length <= 10){
+                    return [this.subjectList];        //这里返回的必须是一个数组，因为 :data="totalSubjectList[currentIndex]"
+                }else{
+                    this.total = Math.floor(length/10) + 1;
+                    return this.handleArr(this.subjectList,10);
+                }
+            }
+        }
+    }
 
 }
 </script>
