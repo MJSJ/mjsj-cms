@@ -202,6 +202,9 @@ export default {
             .text_area{
                 flex: 1;
             }
+            .CodeMirror{
+                height:500px;
+            }
             .select_area{
                 flex: 1;
                 margin-left: 50px;
