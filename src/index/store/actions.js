@@ -29,7 +29,7 @@ export const updateSubject = (context, args) => {
             context.dispatch("fetchSubjectList");
             window.vm.$message("保存成功");
         } else {
-            window.vm.$message.error('删除失败');
+            window.vm.$message.error('保存失败');
         }
 
     })

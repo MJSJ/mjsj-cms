@@ -9,18 +9,18 @@
                 <el-table-column prop="name" label="名称" width="300">
                 </el-table-column>
 
-                <el-table-column label="操作" width="300">
-                    <template scope="scope">
-                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
-
                 <el-table-column label="上次编辑" >
                     <template scope="scope">
                         <div slot="reference" v-if="scope.row.lastEdit">
                             {{scope.row.lastEdit.userName}}--{{handleDataFormat(scope.row.lastEdit.time)}}
                         </div>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="操作">
+                    <template scope="scope">
+                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
 

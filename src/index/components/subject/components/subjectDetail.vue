@@ -132,6 +132,7 @@ export default {
                 matchBrackets: true,
                 showCursorWhenSelecting: true,
                 theme: "monokai",
+                styleActiveLine: true,
                 tabSize: 4,
                 readOnly:false,
             });
